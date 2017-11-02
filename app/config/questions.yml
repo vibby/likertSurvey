@@ -60,14 +60,12 @@ parameters:
       - Plutôt d’accord
       - D’accord
       - Tout à fait d’accord
-    none: ~
 
   likert_questions:
     page1:
       intro0:
         label: "Voici une série de propositions suivies d’une échelle de réponse allant de «pas du tout d’accord» à «tout à fait d’accord». Sélectionnez la réponse qui correspond le mieux à votre opinion."
-        type: ~
-        scale: ~
+        type: separator
       q1:
         label: "J’éprouve vraiment un sentiment d’appartenance à mon organisation"
         type: osgood

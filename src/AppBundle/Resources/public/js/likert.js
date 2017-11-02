@@ -50,7 +50,7 @@ $(document).ready(function() {
         var item = ($(this));
         if (!stop && isItemValid(item)) {
           count = count + 1;
-          lastWasIntro = item.hasClass('none');
+          lastWasIntro = item.hasClass('separator');
         } else {
           stop = true;
         };
@@ -90,7 +90,7 @@ function isItemValid(item) {
     }
 
     return (
-        item.hasClass('none')
+        item.find('.separator').length
         || (!item.find('.required').length)
         || item.find('input:checked').length
         || (item.find('input[type=text]').length && item.find('input').val() != "")

@@ -127,13 +127,12 @@ form>div:last-child:after {
   display:block;
   text-align: center;
 }
-.likert .choiceItem > input {
+.choiceItem > input {
     visibility: hidden;
     position:absolute;
-    top:1px;
 }
 .osgood .choiceItem > input {
-    position:absolute;
+    visibility: visible;
     top:8px;
     left: 130px;
 }

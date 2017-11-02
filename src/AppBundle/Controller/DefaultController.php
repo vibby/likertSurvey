@@ -423,7 +423,7 @@ class DefaultController extends Controller
 
     private function getChoicesFromScale(array $likertQuestion)
     {
-        if (!$likertQuestion['scale']) {
+        if (!isset($likertQuestion['scale']) || !$likertQuestion['scale']) {
             return [];
         }
 
