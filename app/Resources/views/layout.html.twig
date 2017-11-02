@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--[if lte IE 7]> <html class="no-js ie7 oldie" lang="fr"> <![endif]-->
+<!--[if IE 8]> <html class="no-js ie8 oldie" lang="fr"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="fr"> <!--<![endif]-->
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="{{ asset('bundles/app/css/style.css') }}" media="all">
+    {% block head %}
+    {% endblock %}
+
+    {% if ie is not defined %}
+    <!--[if IE]>
+        <meta HTTP-EQUIV="REFRESH" content="0; url=http://likert.beauvivre.fr/ie-no-more">
+    <![endif]-->
+    <!--[if IE]>
+    <script type="text/javascript">
+    window.location = "http://likert.beauvivre.fr/ie-no-more";
+    </script>
+    <![endif]-->
+    {% endif %}
+</head>
+
+
+<body>
+    <header class="line mod">
+        <img alt="Université de Nantes" src="http://www.univ-nantes.fr/images/logo.png?new=2012050301" />
+        <img alt="Université de Lille" src="http://www.univ-lille3.fr/images/2011/logo-lille3.png" />
+
+    </header>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <footer class="line mod">
+        <p>Tous droits réservés aux auteurs d'origine ou ayant validé les traductions, outils assemblés et complétés par Desrumaux & Jeoffrion (2012) − Réalisation 2013 <a href="http://vibby.fr">vibby</a></p>
+    </footer>
+</body>
+</html>
