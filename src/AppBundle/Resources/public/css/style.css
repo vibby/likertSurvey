@@ -48,14 +48,14 @@ body {
     width: 101%;
 }
 
-form {
+#surveyForm {
     overflow-x:hidden;
     overflow-y:hidden;
     width: 940px;
     height: 500px;
     margin-bottom: 20px;
 }
-form>div {
+#surveyForm>div {
     width: 9800px;
 }
 @media screen and (min-width: 400px) {
@@ -76,7 +76,7 @@ form>div {
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 );
     }
 }
-#form>div, form>div>div:last-child {
+#form>div, #surveyForm>div>div:last-child {
     float: left;
     width: 282px;
     display:block;
@@ -85,7 +85,7 @@ form>div {
     padding:5px;
     margin:4px;
 }
-form>div:last-child:after {
+#surveyForm>div:last-child:after {
     content: "";
     display: inline-block;
     margin-right:800px;
@@ -272,7 +272,7 @@ input.button {
     line-height: 14px;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
-#form>div, form>div>div:last-child, .button, .choiceItem > label {
+#form>div, #surveyForm>div>div:last-child, .button, .choiceItem > label {
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;

@@ -2,11 +2,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Respondent;
+use AppBundle\Form\KeyType;
+use AppBundle\Form\SubscribeType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -17,11 +20,57 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $keyForm = $this->createForm(KeyType::class);
+        if ($errorMessage = $this->get('session')->get('lastKeyFormError')) {
+            $keyForm['key']->addError(new FormError($errorMessage));
+            $this->get('session')->set('lastKeyFormError', null);
+        }
+        if ($key = $request->get('key')) {
+            $keyForm['key']->setData($key);
+        }
+        $keyForm->handleRequest($request);
+        if ($keyForm->isSubmitted() && $keyForm->isValid()) {
+            /** @var Respondent $respondent */
+            $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $keyForm->getData()['key']]);
+            if (!$respondent) {
+                $this->get('session')->set('lastKeyFormError', 'Cette clé n’a pas été trouvée.');
+
+                return $this->redirectToRoute('homepage');
+            } elseif ($respondent->isFinished()) {
+                $this->get('session')->set('lastKeyFormError', 'Vous avez déjà completé le formulaire. Vous ne pouvez pas en modifier la saisie.');
+
+                return $this->redirectToRoute('homepage');
+            } else {
+                $this->get('session')->set('currentRespondentKey', $respondent->getKey());
+
+                return $this->redirectToRoute('survey');
+            }
+        }
+
+        $respondent = new Respondent();
+        $registerForm = $this->createForm(SubscribeType::class, $respondent);
+        $registerForm->handleRequest($request);
+        if ($registerForm->isSubmitted() && $registerForm->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($respondent);
+            $em->flush();
+
+            if (isset($request->request->get('respondent')['sendEmail'])) {
+                dump('send');
+            }
+
+            $this->addFlash('success', 'Créé avec succès');
+
+            return $this->redirectToRoute('user_registration');
+        }
+
         return $this->render('index.html.twig', [
             'dataFound' => $this->get('session')->get('data') ? true : false,
+            'keyForm' => $keyForm->createView(),
+            'registerForm' => $registerForm->createView(),
         ]);
     }
-
 
     /**
      * @Route("/ie-no-more")
@@ -42,82 +91,23 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/resultat", name="results")
-     */
-    public function resultAction()
-    {
-        $responses = array();
-        $path = $this->container->getParameter('kernel.root_dir'). '/../app/Responses/';
-        if (($handle = fopen($path . '/_toutes.csv', "r")) !== FALSE) {
-            while (($line = fgetcsv($handle, 1000, ";")) !== FALSE) {
-                $responses[] = $line;
-            }
-            fclose($handle);
-        }
-
-        $likertQuestions = $this->container->getParameter('likert_questions');
-        $questionsFlat = array();
-        foreach ($likertQuestions as $page => $questions) {
-            foreach ($questions as $question) {
-                // $question['scale'] = $likertScales[$question['scale']];
-                $questionsFlat[] = $question;
-            }
-        }
-        $questionsFlat = array_merge(
-            array(
-                array('label'=>'date_debut'),
-                array('label'=>'date_fin'),
-            ),
-            $questionsFlat,
-            array(
-                array('label'=>'age'),
-                array('label'=>'Sexe'),
-                array('label'=>'Situation_famille'),
-                array('label'=>'Nombre_enfants_a_charge'),
-                array('label'=>'Profession'),
-                array('label'=>'Secteur'),
-                array('label'=>'Intitule_poste'),
-                array('label'=>'Heures_travail_semaine'),
-                array('label'=>'Heures_travail_mois'),
-                array('label'=>'Satisfaction_salaire'),
-                array('label'=>'Duree_poste'),
-                array('label'=>'Duree_entreprise'),
-                array('label'=>'Societe'),
-                array('label'=>'Domain'),
-                array('label'=>'Domain_other'),
-                array('label'=>'Nombre_salaries_etablissement'),
-                array('label'=>'Nombre_salaries_entreprise'),
-            )
-        );
-
-        $inversedResponses = array();
-        foreach ($responses as $x => $line) {
-            foreach ($line as $y => $item) {
-                $inversedResponses[$y][$x] = $item;
-            }
-        }
-
-        $iResponse = 0;
-        $data = array();
-        foreach ($questionsFlat as &$question) {
-            if (array_key_exists($iResponse, $inversedResponses)) {
-                $data[] = array_merge(array($question['label']),$inversedResponses[$iResponse]);
-                $iResponse++;
-            } else {
-                $data[] = array($question['label']);
-            }
-        }
-
-        return $this->render('data.html.twig', [
-            'responses' => $data,
-        ]);
-    }
-
-    /**
      * @Route("/questionnaire/{idPage}", name="survey")
      */
     public function questionnaireAction(Request $request, $idPage = 1)
     {
+        $currentRespondentKey = $this->get('session')->get('currentRespondentKey');
+        if (!$currentRespondentKey) {
+            $this->addFlash('Error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
+
+            return $this->redirectToRoute('homepage');
+        }
+        $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $currentRespondentKey]);
+        if (!$respondent) {
+            $this->addFlash('Error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
+
+            return $this->redirectToRoute('homepage');
+        }
+
         $likertScales = $this->container->getParameter('likert_scales');
         $likertQuestions = $this->container->getParameter('likert_questions');
 

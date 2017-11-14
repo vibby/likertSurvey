@@ -1,36 +1,32 @@
 {% extends "layout.html.twig" %}
 
-{% block title %}Enquête 2013 sur la vie au travail{% endblock %}
+{% block title %}Acceuil{% endblock %}
 
 {% block content %}
-    <h1>Enquête 2013 sur la vie au travail</h1>
+    <h1>Enquête FdF management 2018</h1>
     <div class="item">
         {% if dataFound %}
             <a class="button button-primary right" href="{{ path('survey') }}">Continuer</a>
             <p>Vous avez déjà commencé à compléter le questionnaire. Vous pouvez reprendre à la dernière étape validée.</p>
             <hr />
         {% else %}
-            <p>Dans le cadre d’une collaboration entre deux régions (Nord-Pas-de-Calais et Pays-de-la-Loire), nous menons une étude pour laquelle nous vous prions de nous accorder votre précieuse collaboration.</p>
-
-            <p>Le présent questionnaire est <b>anonyme</b> et sert strictement à des fins de recherche. Nous vous demandons de bien vouloir répondre en toute franchise et liberté à la totalité des questions, sinon le questionnaire ne pourra être traité.</p>
-            <p>Ce questionnaire vous est proposé par Kristina Serbezova-Beauvivre, étudiante de Master 1 en Sciences Humaines et Sociales de l’Université de Nantes.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis nulla at felis gravida iaculis. Vestibulum ultricies turpis eget sem consectetur, vel molestie lacus pretium.</p>
+            <p>Praesent non est ut ipsum scelerisque ullamcorper. Nulla nec tortor semper, consequat enim eget, mattis tortor. Cras a leo nec mauris viverra vulputate. Vivamus rutrum commodo massa nec lobortis. Duis egestas, mi sed molestie ullamcorper, tellus tortor dapibus nisl, at tristique magna turpis in velit. Fusce mauris risus, malesuada in nulla in, vestibulum sagittis erat. Fusce ac auctor ex, nec ornare diam. Aenean nec gravida arcu. Vestibulum malesuada, turpis non iaculis placerat, odio justo rhoncus lacus, ut imperdiet nisi eros ut nisi.</p>
         {% endif %}
 
-        <p>Pour toute question, vous pouvez nous contacter à ces adresses mails :<br />
+        <p>Pour toute question, vous pouvez nous contacter à cette adresse courriel :<br />
         <span style="font-size:.8em">Les emails sont volontairement dissimulés, supprimez les [ et ] pour les utiliser</span></p>
         <ul>
-            <li>Kristina Serbezova-Beauvivre : kristina.serbezova[@]etu.univ-nantes.fr</li>
-            <li>Pascale Desmureaux : pascale.desrumaux[@]univ-lille3.fr</li>
-            <li>Christine Jeoffrion : christine.jeoffrion[@]univ-nantes.fr</li>
+            <li>Kristina Beauvivre : kristina.beauvivre[@]fdf.fr</li>
         </ul>
-
         <br />
 
-        {% if dataFound %}
-        {% else %}
-            <a class="button button-primary right" href="{{ path('survey') }}">Commencer</a>
+        {% if not dataFound %}
+            {{ form(keyForm) }}
+            <p>Pas encore de clé d’activation ? Recevez la par courriel en indiquant votre adresse ci-dessous</p>
+            {{ form(registerForm) }}
         {% endif %}
-        <p>Nous vous remercions d'avance de votre collaboration.</p>
+        <p>Nous vous remercions par avance de votre collaboration.</p>
 
     </div>
 {% endblock %}
