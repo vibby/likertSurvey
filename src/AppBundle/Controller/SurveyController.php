@@ -36,53 +36,13 @@ class SurveyController extends Controller
         $likertScales = $this->container->getParameter('likert_scales');
         $likertQuestions = $this->container->getParameter('likert_questions');
 
-        $sectors = array(
-            'Public',
-            'Privé',
-            'Parapublic',
-            );
-        $jobs = array(
-            "Agriculteurs exploitants",
-            "Artisans",
-            "Commerçants et assimilés",
-            "Chefs d'entreprise de plus de 10 salariés ou plus",
-            "Professions libérales et assimilés",
-            "Cadres de la fonction publique, professions intellectuelles et artistiques",
-            "Cadres d'entreprise",
-            "Professions intermédiaires de l'enseignement, de la santé, de la fonction publique et assimilés",
-            "Professions intermédiaires administratives et commerciales des entreprises",
-            "Techniciens",
-            "Contremaîtres, agents de maîtrise",
-            "Employés de la fonction publique",
-            "Employés administratifs d'entreprise",
-            "Employés de commerce",
-            "Personnels de services directs aux particuliers",
-            "Ouvriers qualifiés",
-            "Ouvriers non qualifiés",
-            "Ouvriers agricoles"
-            );
-        $domains = array(
-            "Agriculture",
-            "Industrie",
-            "Électricité, gaz et eau",
-            "Construction",
-            "Commerce",
-            "Hôtels et restaurants",
-            "Transport",
-            "Communication",
-            "Finances, banques et assurances",
-            "Immobilier",
-            "Administration publique",
-            "Education - Enseignement",
-            "Social - Aide aux personnes",
-            "Santé",
-            "Informatique et nouvelles technologies",
-            "Autre, préciser ci-dessous",
-            );
+        if (!$respondent->getStartDate()) {
+            $respondent->setStartDate(new \DateTime());
+        }
 
-        $sessionData = $this->get('session')->get('data');
-        if(!$sessionData) {
-            $sessionData = array('dateDebut' => time());
+        $responseData = $respondent->getResponse();
+        if (!is_array($responseData)) {
+            $responseData = [];
         }
 
         $idPage = 0;
@@ -92,13 +52,13 @@ class SurveyController extends Controller
             if (!array_key_exists('page'. $idPage, $likertQuestions))
                 $found = true;
             else foreach ($likertQuestions['page'. $idPage] as $qKey => $likertQuestion) {
-                if (!array_key_exists('page'. $idPage.'_item'.$qKey, $sessionData)) {
+                if (!array_key_exists('page'. $idPage.'_item'.$qKey, $responseData)) {
                     $found = true;
                 }
             }
         } while (array_key_exists('page'. $idPage, $likertQuestions) && !$found);
 
-        $formBuilder = $this->createFormBuilder($sessionData);
+        $formBuilder = $this->createFormBuilder($responseData);
         $isLastPage = false;
 
         if ($idPage <= count($likertQuestions)) {
@@ -117,6 +77,50 @@ class SurveyController extends Controller
             }
             // dump($formBuilder);die;
         } else {
+            $sectors = array(
+                'Public',
+                'Privé',
+                'Parapublic',
+            );
+            $jobs = array(
+                "Agriculteurs exploitants",
+                "Artisans",
+                "Commerçants et assimilés",
+                "Chefs d'entreprise de plus de 10 salariés ou plus",
+                "Professions libérales et assimilés",
+                "Cadres de la fonction publique, professions intellectuelles et artistiques",
+                "Cadres d'entreprise",
+                "Professions intermédiaires de l'enseignement, de la santé, de la fonction publique et assimilés",
+                "Professions intermédiaires administratives et commerciales des entreprises",
+                "Techniciens",
+                "Contremaîtres, agents de maîtrise",
+                "Employés de la fonction publique",
+                "Employés administratifs d'entreprise",
+                "Employés de commerce",
+                "Personnels de services directs aux particuliers",
+                "Ouvriers qualifiés",
+                "Ouvriers non qualifiés",
+                "Ouvriers agricoles"
+            );
+            $domains = array(
+                "Agriculture",
+                "Industrie",
+                "Électricité, gaz et eau",
+                "Construction",
+                "Commerce",
+                "Hôtels et restaurants",
+                "Transport",
+                "Communication",
+                "Finances, banques et assurances",
+                "Immobilier",
+                "Administration publique",
+                "Education - Enseignement",
+                "Social - Aide aux personnes",
+                "Santé",
+                "Informatique et nouvelles technologies",
+                "Autre, préciser ci-dessous",
+            );
+
             $isLastPage = true;
             $formBuilder
                 ->add( 'age', Type\IntegerType::class, array(
@@ -132,6 +136,7 @@ class SurveyController extends Controller
                     'label' => "Sexe :",
                     'required' => true,
                 ))
+                /*
                 ->add( 'Situation_famille', Type\ChoiceType::class, array(
                     'placeholder' => '-sélectionner-',
                     'choices' => array_flip(array('Seul','En couple')) ,
@@ -202,9 +207,11 @@ class SurveyController extends Controller
                         'non',
                     ))
                 ))
+                */
             ;
 
             /** @var FormFactory $formFactory */
+            /*
             $formFactory = $this->get('form.factory');
             $formBuilder2 = $formFactory
                 ->createNamedBuilder('Duree_poste', Type\FormType::class, array(
@@ -276,20 +283,18 @@ class SurveyController extends Controller
                     'required' => false ,
                     ))
             ;
+            */
         }
         $form = $formBuilder->getForm();
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
-            // var_dump($formData);die;
-            $data = array_merge($sessionData, $formData);
-            $this->get('session')->set('data',$data);
-
+            $data = array_merge($responseData, $formData);
+            $respondent->setResponse($data);
             if ($idPage > count($likertQuestions)) {
 
                 $time = time();
-                $data = array_merge(array('dateFin' => $time),$data);
+                $respondent->setFinishDate(new \DateTime());
 
                 $dataList = "";
                 foreach ($data as $key => &$value) {
@@ -321,6 +326,9 @@ class SurveyController extends Controller
             } else {
                 $nextRoute = 'survey';
             }
+            $em = $this->getDoctrine()->getManagerForClass(Respondent::class);
+            $em->persist($respondent);
+            $em->flush();
 
             return $this->redirectToRoute($nextRoute);
         }

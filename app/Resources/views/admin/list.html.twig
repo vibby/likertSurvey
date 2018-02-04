@@ -1,24 +1,31 @@
-<h1>Résultats</h1>
+{% extends "layout.html.twig" %}
 
-<div class="count">
-    Total : {{ pagination.getTotalItemCount }}
-</div>
+{% block title %}Résultats{% endblock %}
 
-<table>
-    <tr>
-        <th>Clé</th>
-        <th>Email</th>
-        <th>Finalisé</th>
-    </tr>
-    {% for article in pagination %}
+{% block content %}
+    <h1>Résultats</h1>
+
+    <div class="count">
+        Total : {{ pagination.getTotalItemCount }}
+    </div>
+
+    <table>
         <tr>
-            <td>{{ article.key }}</td>
-            <td>{{ article.email }}</td>
-            <td>{{ article.finished }}</td>
+            <th>Clé</th>
+            <th>Email</th>
+            <th>Finalisé</th>
         </tr>
-    {% endfor %}
-</table>
+        {% for article in pagination %}
+            <tr>
+                <td>{{ article.key }}</td>
+                <td>{{ article.email }}</td>
+                <td>{{ article.finished }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 
-<div class="navigation">
-    {{ knp_pagination_render(pagination) }}
-</div>
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
+

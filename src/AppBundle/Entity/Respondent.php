@@ -47,8 +47,29 @@ class Respondent
      */
     private $emailDates;
 
+    /**
+     * @ORM\Column(name="date_finish", type="datetime", nullable=true)
+     */
+    private $finishDate;
+
+    /**
+     * @ORM\Column(name="date_start", type="datetime", nullable=true)
+     */
+    private $startDate;
+
+    /**
+     * @ORM\Column(name="date_created", type="datetime")
+     */
+    private $createdDate;
+
+    /**
+     * @ORM\Column(name="revived", type="integer")
+     */
+    private $revived = 0;
+
     public function __construct()
     {
+        $this->setCreatedDate(new \DateTime());
         $this->isFinished = false;
     }
 
@@ -81,6 +102,46 @@ class Respondent
     public function setResponse($response)
     {
         $this->response = $response;
+    }
+
+    public function getRevived()
+    {
+        return $this->revived;
+    }
+
+    public function setRevived($revived)
+    {
+        $this->revived = $revived;
+    }
+
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    public function getFinishDate()
+    {
+        return $this->finishDate;
+    }
+
+    public function setFinishDate($finishDate)
+    {
+        $this->finishDate = $finishDate;
+    }
+
+    public function getCreatedDate()
+    {
+        return $this->createdDate;
+    }
+
+    public function setCreatedDate($createdDate)
+    {
+        $this->createdDate = $createdDate;
     }
 
     public function getEmailDates()
