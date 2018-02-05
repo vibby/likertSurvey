@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
-class SubscribeType extends AbstractType
+class RespondentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

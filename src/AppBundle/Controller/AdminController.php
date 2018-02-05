@@ -2,12 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\User;
-use AppBundle\Form\UserType;
+use AppBundle\Entity\Respondent;
+use AppBundle\Form\RespondentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class AdminController extends Controller
 {
@@ -22,39 +22,28 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/admin/register", name="admin_registration")
+     * @Route("/admin/create", name="admin_create")
      *
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function createAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        // 1) build the form
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $respondent = new Respondent();
+        $form = $this->createForm(RespondentType::class, $respondent);
 
-        // 2) handle the submit (will only happen on POST)
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // 3) Encode the password (you could also do this via Doctrine listener)
-            $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($password);
-
-            // 4) save the User!
             $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            $em->persist($respondent);
             $em->flush();
 
-            // ... do any other work - like sending them an email, etc
-            // maybe set a "flash" success message for the user
-
-            return $this->redirectToRoute('replace_with_some_route');
+            return $this->redirectToRoute('admin_list');
         }
 
         return $this->render(
-            'register.html.twig',
+            'admin/create.html.twig',
             array('form' => $form->createView())
         );
     }
@@ -76,9 +65,8 @@ class AdminController extends Controller
         );
 
         // parameters to template
-        return $this->render('list.html.twig', array('pagination' => $pagination));
+        return $this->render('admin/list.html.twig', array('pagination' => $pagination));
     }
-
 
     /**
      * @Route("/admin/results", name="results")

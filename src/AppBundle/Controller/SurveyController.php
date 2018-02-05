@@ -13,83 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DefaultController extends Controller
+class SurveyController extends Controller
 {
-    /**
-     * @Route("/", name="homepage")
-     */
-    public function indexAction(Request $request)
-    {
-        $keyForm = $this->createForm(KeyType::class);
-        if ($errorMessage = $this->get('session')->get('lastKeyFormError')) {
-            $keyForm['key']->addError(new FormError($errorMessage));
-            $this->get('session')->set('lastKeyFormError', null);
-        }
-        if ($key = $request->get('key')) {
-            $keyForm['key']->setData($key);
-        }
-        $keyForm->handleRequest($request);
-        if ($keyForm->isSubmitted() && $keyForm->isValid()) {
-            /** @var Respondent $respondent */
-            $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $keyForm->getData()['key']]);
-            if (!$respondent) {
-                $this->get('session')->set('lastKeyFormError', 'Cette clé n’a pas été trouvée.');
-
-                return $this->redirectToRoute('homepage');
-            } elseif ($respondent->isFinished()) {
-                $this->get('session')->set('lastKeyFormError', 'Vous avez déjà completé le formulaire. Vous ne pouvez pas en modifier la saisie.');
-
-                return $this->redirectToRoute('homepage');
-            } else {
-                $this->get('session')->set('currentRespondentKey', $respondent->getKey());
-
-                return $this->redirectToRoute('survey');
-            }
-        }
-
-        $respondent = new Respondent();
-        $registerForm = $this->createForm(SubscribeType::class, $respondent);
-        $registerForm->handleRequest($request);
-        if ($registerForm->isSubmitted() && $registerForm->isValid()) {
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($respondent);
-            $em->flush();
-
-            if (isset($request->request->get('respondent')['sendEmail'])) {
-                dump('send');
-            }
-
-            $this->addFlash('success', 'Créé avec succès');
-
-            return $this->redirectToRoute('user_registration');
-        }
-
-        return $this->render('index.html.twig', [
-            'dataFound' => $this->get('session')->get('data') ? true : false,
-            'keyForm' => $keyForm->createView(),
-            'registerForm' => $registerForm->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/ie-no-more")
-     */
-    public function ieAction()
-    {
-        return $this->render('ie-no-more.html.twig', [
-            'ie' => true,
-        ]);
-    }
-
-    /**
-     * @Route("/merci", name="thanks")
-     */
-    public function merciAction()
-    {
-        return $this->render('merci.html.twig');
-    }
-
     /**
      * @Route("/questionnaire/{idPage}", name="survey")
      */
@@ -426,7 +351,5 @@ class DefaultController extends Controller
             default:
                 throw new \Exception('Cannot understand scale type');
         }
-
-
     }
 }

@@ -27,14 +27,20 @@
     <header class="line mod">
         <img alt="FdF" src="http://fdf-performance-entreprise.com/wp-content/uploads/2014/07/logoFdF.png" />
         <img alt="Université de Nantes" src="http://www.univ-nantes.fr/uas/institutionnel/LOGO/logo%20un2012blanc_larg40.png" />
-
     </header>
     <div class="content">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
         {% block content %}
         {% endblock %}
     </div>
     <footer class="line mod">
-        <p>Tous droits réservés aux auteurs d'origine ou ayant validé les traductions, outils assemblés et complétés par Desrumaux & Jeoffrion (2012) − Réalisation 2013 <a href="http://vibby.fr">vibby</a></p>
+        <p>Tous droits réservés aux auteurs d'origine ou ayant validé les traductions, outils assemblés et complétés par Desrumaux & Jeoffrion (2012) − Réalisation 2018 <a href="http://vibby.fr">vibby</a></p>
     </footer>
 </body>
 </html>
