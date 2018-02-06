@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -83,10 +84,28 @@ class Respondent
      */
     private $revived = 0;
 
+    // ...
+    /**
+     * @ORM\OneToMany(targetEntity="Respondent", mappedBy="manager")
+     */
+    private $subordinates;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Respondent", inversedBy="subordinates")
+     * @ORM\JoinColumn(name="manager_id", referencedColumnName="id")
+     */
+    private $manager;
+
     public function __construct()
     {
         $this->setCreatedDate(new \DateTime());
         $this->isFinished = false;
+        $this->subordinates = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->email;
     }
 
     public function getId()
@@ -102,7 +121,8 @@ class Respondent
     public function setEmail($email)
     {
         $this->email = $email;
-        $this->key = substr(base_convert(md5($email), 16, 36), 0, 8);
+        $salt = 'lræi\'—dfKC]ocIW}±ð©0…R!|R?è†UoRhLnm2,)Rlt/X®f!r~…×≠)iE3|';
+        $this->key = substr(crypt($email, $salt), 0, 8);
     }
 
     public function getEmailFeedback()
@@ -214,5 +234,41 @@ class Respondent
     public function isFeedbackTeam()
     {
         return $this->feedbackTeam;
+    }
+
+    public function addSubordinate(Respondent $respondent)
+    {
+        if (!$this->subordinates->contains($respondent)) {
+            $respondent->setManager($this);
+            $this->subordinates->add($respondent);
+        }
+    }
+
+    public function removeSubordinate(Respondent $respondent)
+    {
+        if ($this->subordinates->contains($respondent)) {
+            $respondent->setManager(null);
+            $this->subordinates->remove($respondent);
+        }
+    }
+
+    public function getSubordinates()
+    {
+        return $this->subordinates;
+    }
+
+    public function setManager(Respondent $manager)
+    {
+        if ($this->manager) {
+            throw new \Exception('Cette personne est déjà définie.');
+        }
+
+        $manager->addSubordinate($this);
+        $this->manager = $manager;
+    }
+
+    public function getManager()
+    {
+        return $this->manager;
     }
 }

@@ -3,8 +3,10 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Respondent;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,6 +22,7 @@ class GetFeedbackType extends AbstractType
                 EmailType::class,
                 [
                     'label' => 'Votre email',
+                    'required' => false,
                 ]
             )
             ->add(
@@ -37,6 +40,37 @@ class GetFeedbackType extends AbstractType
                     'label' => 'Inclure une synthèse de mon équipe',
                     'required' => false,
                 ]
+            )
+            ->add(
+                'subordinates',
+                CollectionType::class,
+                array(
+                    'entry_type' => RespondentType::class,
+                    'required'  => false,
+                    'label' => 'Mes collaborateurs',
+                    'allow_add' => true,
+                    'by_reference' => false,
+                )
+            )
+            ->add(
+                'manager',
+                RespondentType::class,
+                array(
+                    'required'  => false,
+                    'label' => 'Mon manager',
+                )
+            )
+            ->add(
+                'colleagues',
+                CollectionType::class,
+                array(
+                    'entry_type' => RespondentType::class,
+                    'required'  => false,
+                    'label' => 'Mes collègues',
+                    'allow_add' => true,
+                    'by_reference' => false,
+                    'mapped' => false,
+                )
             )
             ->add('ok', SubmitType::class)
         ;

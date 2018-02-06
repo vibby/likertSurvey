@@ -23,8 +23,11 @@
 
         {% if not dataFound %}
             {{ form(keyForm) }}
-            <p>Pas encore de clé d’activation ? Recevez la par courriel en indiquant votre adresse ci-dessous</p>
-            {{ form(registerForm) }}
+            <p>Pas encore de clé d’activation ? Vous l’avez perdu ? Recevez la par courriel en indiquant votre adresse ci-dessous</p>
+            {{ form_start(registerForm) }}
+                {{ form_row(registerForm.email) }}
+                <input type="submit" value="Ok" />
+            {{ form_end(registerForm) }}
         {% endif %}
         <p>Nous vous remercions par avance de votre collaboration.</p>
 

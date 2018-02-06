@@ -15,7 +15,6 @@ class RespondentType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('ok', SubmitType::class)
         ;
     }
 
