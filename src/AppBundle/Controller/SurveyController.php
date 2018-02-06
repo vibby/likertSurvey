@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class SurveyController extends Controller
@@ -52,7 +53,8 @@ class SurveyController extends Controller
             if (!array_key_exists('page'. $idPage, $likertQuestions))
                 $found = true;
             else foreach ($likertQuestions['page'. $idPage] as $qKey => $likertQuestion) {
-                if (!array_key_exists('page'. $idPage.'_item'.$qKey, $responseData)) {
+                $responseKey = 'page'. $idPage.'_item'.$qKey;
+                if (!array_key_exists($responseKey, $responseData) || ($responseData[$responseKey] === null && $likertQuestion['type'] !== 'separator')) {
                     $found = true;
                 }
             }
@@ -291,6 +293,14 @@ class SurveyController extends Controller
             $formData = $form->getData();
             $data = array_merge($responseData, $formData);
             $respondent->setResponse($data);
+            $em = $this->getDoctrine()->getManagerForClass(Respondent::class);
+            $em->persist($respondent);
+            $em->flush();
+
+            if ($request->isXmlHttpRequest()) {
+                return new Response('ok');
+            }
+
             if ($idPage > count($likertQuestions)) {
 
                 $time = time();
@@ -327,9 +337,6 @@ class SurveyController extends Controller
             } else {
                 $nextRoute = 'survey';
             }
-            $em = $this->getDoctrine()->getManagerForClass(Respondent::class);
-            $em->persist($respondent);
-            $em->flush();
 
             return $this->redirectToRoute($nextRoute);
         }

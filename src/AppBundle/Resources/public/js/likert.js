@@ -53,9 +53,10 @@ function last() {
   var lastWasIntro = false;
   $('#form>div').each(function(){
     var item = ($(this));
+    console.log(item);
     if (!stop && isItemValid(item)) {
       count = count + 1;
-      lastWasIntro = item.find('.separator').length();
+      lastWasIntro = item.find('.separator');
     } else {
       stop = true;
     }
@@ -71,6 +72,16 @@ function next() {
   var count = Math.floor(form.scrollLeft() / 302) + 1;
   var item = ($('#form>div:nth-child(' + count + ')'));
   if (isItemValid(item)) {
+    $.ajax({
+      type        : form.attr('method'), // define the type of HTTP verb we want to use (POST for our form)
+      url         : form.attr('action'), // the url where we want to POST
+      data        : form.serialize(), // our data object
+      dataType    : 'json', // what type of data do we expect back from the server
+      encode      : true
+    })
+      .success(function(data) {
+        alert(data);
+      });
     var dec = 302 - form.scrollLeft() % 302;
     dec = dec > 0 ? dec : 302;
     form.stop().animate({
@@ -81,17 +92,6 @@ function next() {
     item.addClass('needed');
   }
 
-  // process the form
-  $.ajax({
-    type        : form.attr('type'), // define the type of HTTP verb we want to use (POST for our form)
-    url         : form.attr('action'), // the url where we want to POST
-    data        : form.serialize(), // our data object
-    dataType    : 'json', // what type of data do we expect back from the server
-    encode      : true
-  })
-    .done(function(data) {
-      console.log(data);
-    });
 }
 
 function isItemValid(item) {
