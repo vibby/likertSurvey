@@ -81,12 +81,4 @@ class AccessController extends Controller
             'ie' => true,
         ]);
     }
-
-    /**
-     * @Route("/merci", name="thanks")
-     */
-    public function merciAction()
-    {
-        return $this->render('merci.html.twig');
-    }
 }

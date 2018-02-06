@@ -16,7 +16,13 @@
     <![endif]-->
     <!--[if IE]>
     <script type="text/javascript">
-    window.location = "http://likert.beauvivre.fr/ie-no-more";
+        function IEversion () {
+            var myNav = navigator.userAgent.toLowerCase();
+            return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+        }
+        if (IEversion() < 10) {
+            window.location = "http://likert.beauvivre.fr/ie-no-more";
+        }
     </script>
     <![endif]-->
     {% endif %}

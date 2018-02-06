@@ -7,6 +7,11 @@
     <div class="item">
         <p>Votre participation à l’enquête a pu être complétement prise en compte. Nous vous remercions de cette participation !<p>
 
+        {% if form %}
+            <p>Si vous êtes interessé par les résultats de cette étude, merci de compléter votre courriel ci-dessous pour recevoir gratuitement une présentation générale des résultats. Cet email sera utilisé uniquement à cette fin.<p>
+            {{ form(form) }}
+        {% endif %}
+
         <p>Pour toute question, vous pouvez nous contacter à cette adresse de courriel :<br />
         <span style="font-size:.8em">Les emails sont volontairement dissimulés, supprimez les [ et ] pour les utiliser</span></p>
         <ul>

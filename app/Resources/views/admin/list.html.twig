@@ -14,12 +14,18 @@
             <th>Clé</th>
             <th>Email</th>
             <th>Finalisé</th>
+            <th>Email de feedback</th>
+            <th>moi</th>
+            <th>équipe</th>
         </tr>
         {% for article in pagination %}
             <tr>
                 <td>{{ article.key }}</td>
                 <td>{{ article.email }}</td>
                 <td>{{ article.finished }}</td>
+                <td>{{ article.emailFeedback }}</td>
+                <td>{{ article.feedbackMyself }}</td>
+                <td>{{ article.feedbackTeam }}</td>
             </tr>
         {% endfor %}
     </table>

@@ -321,6 +321,7 @@ class SurveyController extends Controller
                 fclose($handle);
 
                 $this->get('session')->set('data',null);
+                $this->get('session')->set('respondentId',$respondent->getId());
 
                 $nextRoute = 'thanks';
             } else {

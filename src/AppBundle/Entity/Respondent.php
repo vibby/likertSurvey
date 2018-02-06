@@ -27,10 +27,16 @@ class Respondent
     private $key;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\Column(type="string", length=200, unique=true)
      * @Assert\Email()
      */
     private $email;
+
+    /**
+     * @ORM\Column(type="string", length=200, nullable=true)
+     * @Assert\Email()
+     */
+    private $emailFeedback;
 
     /**
      * @ORM\Column(name="response", type="array")
@@ -63,6 +69,16 @@ class Respondent
     private $createdDate;
 
     /**
+     * @ORM\Column(name="feedback_myself", type="boolean", nullable=true)
+     */
+    private $feedbackMyself;
+
+    /**
+     * @ORM\Column(name="feedback_team", type="boolean", nullable=true)
+     */
+    private $feedbackTeam;
+
+    /**
      * @ORM\Column(name="revived", type="integer")
      */
     private $revived = 0;
@@ -71,6 +87,11 @@ class Respondent
     {
         $this->setCreatedDate(new \DateTime());
         $this->isFinished = false;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function getEmail()
@@ -84,14 +105,19 @@ class Respondent
         $this->key = substr(base_convert(md5($email), 16, 36), 0, 8);
     }
 
+    public function getEmailFeedback()
+    {
+        return $this->emailFeedback;
+    }
+
+    public function setEmailFeedback($emailFeedback)
+    {
+        $this->emailFeedback = $emailFeedback;
+    }
+
     public function getKey()
     {
         return $this->key;
-    }
-
-    public function setKey($key)
-    {
-        $this->key = $key;
     }
 
     public function getResponse()
@@ -168,5 +194,25 @@ class Respondent
     public function isFinished()
     {
         return $this->isFinished;
+    }
+
+    public function setFeedbackMyself($feedbackMyself)
+    {
+        $this->feedbackMyself = $feedbackMyself;
+    }
+
+    public function isFeedbackMyself()
+    {
+        return $this->feedbackMyself;
+    }
+
+    public function setFeedbackTeam($feedbackTeam)
+    {
+        $this->feedbackTeam = $feedbackTeam;
+    }
+
+    public function isFeedbackTeam()
+    {
+        return $this->feedbackTeam;
     }
 }
