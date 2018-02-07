@@ -30,6 +30,15 @@
         {% endfor %}
     </table>
 
+    <p>Télécharger :</p>
+    <ul>
+        <li>
+            <a href="{{ path('admin_list', {'_format': 'csv', 'filter': 'manager_under_five_collabs'}) }}">
+                Les managers qui n’ont pas les réponses de 5 collaborateurs
+            </a>
+        </li>
+    </ul>
+
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}
     </div>

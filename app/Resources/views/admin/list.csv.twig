@@ -1,0 +1,3 @@
+Email,Email feedback,feedbackMyself,feedbackTeam
+{% for respondent in respondents %}{{ respondent.email }},{{ respondent.emailFeedback }},{{ respondent.feedbackMyself }},{{ respondent.feedbackTeam }}
+{% endfor %}

@@ -25,8 +25,8 @@ class AfterController extends Controller
             if ($form->isSubmitted() && $form->isValid()) {
 //                $this->get('session')->set('respondentId', null);
                 $em = $this->getDoctrine()->getManager();
-                foreach ($form['colleagues']->getData() as $respondent) {
-                    $em->persist($respondent);
+                foreach ($form['colleagues']->getData() as $colleague) {
+                    $em->persist($colleague);
                 }
                 $em->persist($respondent);
                 $em->flush();

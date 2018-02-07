@@ -9,6 +9,8 @@ use AppBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AdminController extends Controller
@@ -87,25 +89,67 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/admin/list", name="admin_list")
+     * @Route(
+     *     "/admin/list/{filter}{page}.{_format}",
+     *     name="admin_list",
+     *     defaults={
+     *         "_format": "html",
+     *         "filter": "all",
+     *         "page": 1
+     *     },
+     *     requirements={
+     *         "_format": "html|csv",
+     *         "page": "\d+",
+     *         "filter": "[a-zA-Z_]+"
+     *     }
+     * )
      */
-    public function listAction(Request $request)
+    public function listAction(Request $request, $_format, $filter)
     {
         $em    = $this->get('doctrine.orm.entity_manager');
-        $dql   = "SELECT r FROM AppBundle:Respondent r";
+        switch ($filter) {
+            case 'manager_under_five_collabs':
+                $dql = "SELECT r FROM AppBundle:Respondent r";
+                break;
+            case 'all':
+                $dql = "SELECT r FROM AppBundle:Respondent r";
+                break;
+            default:
+                throw new \Exception(sprintf(
+                    'Cannot understand filter «%s»',
+                    $filter
+                ));
+        }
         $query = $em->createQuery($dql);
 
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            20
-        );
+        if ($_format == 'html') {
+            $paginator  = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $query,
+                $request->query->getInt('page', 1),
+                20
+            );
 
-        // parameters to template
-        return $this->render('admin/list.html.twig', array('pagination' => $pagination));
+            // parameters to template
+            return $this->render('admin/list.html.twig', array('pagination' => $pagination));
+        } else {
+            $response = new Response($this->get('twig')->render(
+                'admin/list.csv.twig',
+                array('respondents' => $query->getResult())
+            ));
+
+            // Create the disposition of the file
+            $disposition = $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                sprintf('%s.%s', $filter, $_format)
+            );
+
+            // Set the content disposition
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
+        }
     }
-
 
     /**
      * @Route("/admin/results", name="results")
