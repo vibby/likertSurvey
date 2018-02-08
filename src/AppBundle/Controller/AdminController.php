@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Respondent;
 use AppBundle\Entity\User;
+use AppBundle\Form\ManyRespondentType;
 use AppBundle\Form\RespondentType;
 use AppBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -12,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Validator\Constraints\EmailValidator;
 
 class AdminController extends Controller
 {
@@ -77,6 +79,36 @@ class AdminController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($respondent);
+            $em->flush();
+
+            return $this->redirectToRoute('admin_list');
+        }
+
+        return $this->render(
+            'admin/create.html.twig',
+            array('form' => $form->createView())
+        );
+    }
+
+    /**
+     * @Route("/admin/createMany", name="admin_create_many")
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function createManyAction(Request $request)
+    {
+        $form = $this->createForm(ManyRespondentType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $respondents = [];
+            foreach ($form->getData()['emails'] as $email) {
+                $respondent = new Respondent();
+                $respondent->setEmail($email);
+                $em->persist($respondent);
+                $respondents[] = $respondent;
+            }
             $em->flush();
 
             return $this->redirectToRoute('admin_list');
