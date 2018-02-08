@@ -16,16 +16,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 class AccessController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route(
+     *     "/{key}",
+     *     name="homepage",
+     *     defaults={
+     *         "key": "",
+     *     }
+     * )
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $key = '')
     {
         $keyForm = $this->createForm(KeyType::class);
         if ($errorMessage = $this->get('session')->get('lastKeyFormError')) {
             $keyForm['key']->addError(new FormError($errorMessage));
             $this->get('session')->set('lastKeyFormError', null);
         }
-        if ($key = $request->get('key')) {
+        if ($key) {
             $keyForm['key']->setData($key);
         }
         $keyForm->handleRequest($request);

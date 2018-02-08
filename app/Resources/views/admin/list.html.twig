@@ -7,6 +7,9 @@
 
     <div class="count">
         Total : {{ pagination.getTotalItemCount }}
+        <a href="{{ path('admin_list', {'_format': 'csv', 'filter': filter}) }}">
+            Télécharger le csv de cette liste
+        </a>
     </div>
 
     <table>
@@ -30,13 +33,24 @@
         {% endfor %}
     </table>
 
-    <p>Télécharger :</p>
     <ul>
         <li>
-            <a href="{{ path('admin_list', {'_format': 'csv', 'filter': 'manager_under_five_collabs'}) }}">
+            <a href="{{ path('admin_list') }}">
+                Toutes les réponses
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('admin_list', {'filter': 'manager_under_five_collabs'}) }}">
                 Les managers qui n’ont pas les réponses de 5 collaborateurs
             </a>
         </li>
+        {% if app.session.get('previously_inserted_keys') %}
+            <li>
+                <a href="{{ path('admin_list', {'filter': 'previously_inserted_keys'}) }}">
+                    Les derniers emails inserés
+                </a>
+            </li>
+        {% endif %}
     </ul>
 
     <div class="navigation">

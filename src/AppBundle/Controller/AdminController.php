@@ -111,7 +111,12 @@ class AdminController extends Controller
             }
             $em->flush();
 
-            return $this->redirectToRoute('admin_list');
+            $respondents = array_map(function (Respondent $respondent) {
+                return $respondent->getKey();
+            }, $respondents);
+            $this->get('session')->set('previously_inserted_keys', $respondents);
+
+            return $this->redirectToRoute('admin_list', ['filter' => 'previously_inserted_keys']);
         }
 
         return $this->render(
@@ -136,9 +141,11 @@ class AdminController extends Controller
      *     }
      * )
      */
-    public function listAction(Request $request, $_format, $filter)
+    public function listAction(Request $request, $_format, $filter, $page)
     {
         $em    = $this->get('doctrine.orm.entity_manager');
+        $query = $dql = null;
+        $params = [];
         switch ($filter) {
             case 'manager_under_five_collabs':
                 $dql = "SELECT r FROM AppBundle:Respondent r";
@@ -146,37 +153,47 @@ class AdminController extends Controller
             case 'all':
                 $dql = "SELECT r FROM AppBundle:Respondent r";
                 break;
+            case 'previously_inserted_keys':
+                $dql = "SELECT r FROM AppBundle:Respondent r WHERE r.key IN (:keys)";
+                $params['keys'] = $this->get('session')->get('previously_inserted_keys');
+                break;
             default:
                 throw new \Exception(sprintf(
                     'Cannot understand filter «%s»',
                     $filter
                 ));
         }
-        $query = $em->createQuery($dql);
+        if (!$query) {
+            $query = $em->createQuery($dql);
+            $query->setParameters($params);
+        }
 
         if ($_format == 'html') {
             $paginator  = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,
-                $request->query->getInt('page', 1),
+                $page,
                 20
             );
 
             // parameters to template
-            return $this->render('admin/list.html.twig', array('pagination' => $pagination));
+            return $this->render(
+                'admin/list.html.twig',
+                [
+                    'pagination' => $pagination,
+                    'filter' => $filter,
+                ]
+            );
         } else {
             $response = new Response($this->get('twig')->render(
                 'admin/list.csv.twig',
                 array('respondents' => $query->getResult())
             ));
 
-            // Create the disposition of the file
             $disposition = $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
                 sprintf('%s.%s', $filter, $_format)
             );
-
-            // Set the content disposition
             $response->headers->set('Content-Disposition', $disposition);
 
             return $response;
