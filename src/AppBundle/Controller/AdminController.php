@@ -148,7 +148,14 @@ class AdminController extends Controller
         $params = [];
         switch ($filter) {
             case 'manager_under_five_collabs':
-                $dql = "SELECT r FROM AppBundle:Respondent r";
+                $query = $em->createQueryBuilder()
+                    ->select('r')
+                    ->from('AppBundle:Respondent','r')
+                    ->leftJoin('r.subordinates', 's')
+                    ->having('count(s.id) < 5')
+                    ->where('r.feedbackTeam = 1')
+                    ->groupBy('r.id')
+                    ->getQuery();
                 break;
             case 'all':
                 $dql = "SELECT r FROM AppBundle:Respondent r";
@@ -173,7 +180,8 @@ class AdminController extends Controller
             $pagination = $paginator->paginate(
                 $query,
                 $page,
-                20
+                20,
+                ['wrap-queries' => true]
             );
 
             // parameters to template
