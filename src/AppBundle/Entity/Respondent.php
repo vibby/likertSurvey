@@ -84,6 +84,11 @@ class Respondent
      */
     private $revived = 0;
 
+    /**
+     * @ORM\Column(name="is_manager", type="integer", nullable=true)
+     */
+    private $isManager;
+
     // ...
     /**
      * @ORM\OneToMany(targetEntity="Respondent", mappedBy="manager")
@@ -270,5 +275,18 @@ class Respondent
     public function getManager()
     {
         return $this->manager;
+    }
+
+    public function getIsManager()
+    {
+        if (count($this->getSubordinates())) {
+            return true;
+        }
+        return $this->isManager;
+    }
+
+    public function setIsManager($isManager)
+    {
+        $this->$isManager = $isManager;
     }
 }

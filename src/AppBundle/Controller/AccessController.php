@@ -21,6 +21,9 @@ class AccessController extends Controller
      *     name="homepage",
      *     defaults={
      *         "key": "",
+     *     },
+     *     requirements={
+     *         "key": "[^/]{8}"
      *     }
      * )
      */
@@ -49,7 +52,11 @@ class AccessController extends Controller
             } else {
                 $this->get('session')->set('currentRespondentKey', $respondent->getKey());
 
-                return $this->redirectToRoute('survey');
+                if ($respondent->getIsManager() === null) {
+                    return $this->redirectToRoute('is_manager');
+                } else {
+                    return $this->redirectToRoute('survey');
+                }
             }
         }
 

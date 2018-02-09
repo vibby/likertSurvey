@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Respondent;
+use AppBundle\Form\IsManagerType;
 use AppBundle\Form\KeyType;
 use AppBundle\Form\SubscribeType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,21 +18,42 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SurveyController extends Controller
 {
     /**
+     * @Route(
+     *     "/commencer",
+     *     name="is_manager"
+     * )
+     */
+    public function isManagerAction(Request $request)
+    {
+        if (!($respondent = $this->getRespondentFromSessionOrRedirect()) instanceof Respondent) {
+            return $respondent;
+        }
+
+        $isManagerForm = $this->createForm(IsManagerType::class);
+        $isManagerForm->handleRequest($request);
+        if ($isManagerForm->isSubmitted() && $isManagerForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($respondent);
+            $em->flush();
+
+            return $this->redirectToRoute('survey');
+        }
+
+        return $this->render(
+            'is_manager.html.twig',
+            [
+                'isManagerForm' => $isManagerForm->createView(),
+            ]
+        );
+    }
+
+    /**
      * @Route("/questionnaire/{idPage}", name="survey")
      */
     public function questionnaireAction(Request $request, $idPage = 1)
     {
-        $currentRespondentKey = $this->get('session')->get('currentRespondentKey');
-        if (!$currentRespondentKey) {
-            $this->addFlash('Error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
-
-            return $this->redirectToRoute('homepage');
-        }
-        $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $currentRespondentKey]);
-        if (!$respondent) {
-            $this->addFlash('Error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
-
-            return $this->redirectToRoute('homepage');
+        if (!($respondent = $this->getRespondentFromSessionOrRedirect()) instanceof Respondent) {
+            return $respondent;
         }
 
         $likertScales = $this->container->getParameter('likert_scales');
@@ -367,5 +389,23 @@ class SurveyController extends Controller
             default:
                 throw new \Exception('Cannot understand scale type');
         }
+    }
+
+    private function getRespondentFromSessionOrRedirect()
+    {
+        $currentRespondentKey = $this->get('session')->get('currentRespondentKey');
+        if (!$currentRespondentKey) {
+            $this->addFlash('Error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
+
+            return $this->redirectToRoute('homepage');
+        }
+        $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $currentRespondentKey]);
+        if (!$respondent) {
+            $this->addFlash('Error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $respondent;
     }
 }
