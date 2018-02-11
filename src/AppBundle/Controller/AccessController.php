@@ -38,6 +38,7 @@ class AccessController extends Controller
             $keyForm['key']->setData($key);
         }
         $keyForm->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
         if ($keyForm->isSubmitted() && $keyForm->isValid()) {
             /** @var Respondent $respondent */
             $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $keyForm->getData()['key']]);
@@ -51,6 +52,10 @@ class AccessController extends Controller
                 return $this->redirectToRoute('homepage');
             } else {
                 $this->get('session')->set('currentRespondentKey', $respondent->getKey());
+                $respondent->setLastConnectionDate(new \DateTime());
+                $respondent->setRevivedCount(0);
+                $em->persist($respondent);
+                $em->flush();
 
                 if ($respondent->getIsManager() === null) {
                     return $this->redirectToRoute('is_manager');
@@ -65,7 +70,6 @@ class AccessController extends Controller
         $registerForm->handleRequest($request);
         if ($registerForm->isSubmitted() && $registerForm->isValid()) {
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($respondent);
             $em->flush();
 

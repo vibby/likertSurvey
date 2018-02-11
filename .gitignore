@@ -17,5 +17,5 @@
 /web/bundles/
 
 .idea/
-!/app/Responses
-/app/Responses/*
+!/app/data/*
+/app/data/*/*

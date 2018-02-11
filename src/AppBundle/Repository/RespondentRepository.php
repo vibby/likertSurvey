@@ -2,7 +2,9 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Respondent;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 class RespondentRepository extends EntityRepository
 {
@@ -32,14 +34,44 @@ class RespondentRepository extends EntityRepository
             ->getQuery();
     }
 
-    public function getQueryUnconnectedSinceXDays($days)
+    public function getQueryUnconnectedSinceXDays($fromDate, $maxCount = 3)
     {
-        $from = new \DateTime();
-        $from->sub(new \DateInterval(sprintf('P%sD', $days)));
+        $qb = $this->createQueryBuilder('r');
+        $qb = $this->addExportWhere($qb, $fromDate, $maxCount);
 
-        return $this->createQueryBuilder('r')
-            ->where('r.lastConnected < :date')
-            ->setParameter(':date', $from)
-            ->getQuery();
+        return $qb->getQuery();
+    }
+
+    private function addExportWhere(QueryBuilder $qb, $fromDate, $maxCount)
+    {
+        return $qb->where(<<<DQL
+            r.revivedCount <= :revived_count
+            and
+            (
+                r.lastConnectionDate < :date
+                or
+                (
+                    r.lastConnectionDate = :null
+                    and
+                    r.createdDate < :date
+                )
+            )
+DQL
+        )
+        ->setParameter(':date', $fromDate)
+        ->setParameter(':null', null)
+        ->setParameter(':revived_count', $maxCount);
+
+        return $qb;
+    }
+
+    public function updateIncrementExport($fromDate, $maxCount = 3)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->update(Respondent::class, 'r');
+        $qb->set('r.revivedCount', 'r.revivedCount+1');
+        $qb = $this->addExportWhere($qb, $fromDate, $maxCount);
+
+        return $qb->getQuery()->execute();
     }
 }

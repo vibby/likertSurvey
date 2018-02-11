@@ -145,7 +145,7 @@ class AdminController extends Controller
      *     }
      * )
      */
-    public function listAction(Request $request, $_format, $filter, $page)
+    public function listAction($_format, $filter, $page)
     {
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository(Respondent::class);
         switch ($filter) {

@@ -70,6 +70,11 @@ class Respondent
     private $createdDate;
 
     /**
+     * @ORM\Column(name="last_connection_date", type="datetime", nullable=true)
+     */
+    private $lastConnectionDate;
+
+    /**
      * @ORM\Column(name="feedback_myself", type="boolean", nullable=true)
      */
     private $feedbackMyself;
@@ -80,9 +85,9 @@ class Respondent
     private $feedbackTeam;
 
     /**
-     * @ORM\Column(name="revived", type="integer")
+     * @ORM\Column(name="revived_count", type="integer")
      */
-    private $revived = 0;
+    private $revivedCount = 0;
 
     /**
      * @ORM\Column(name="is_manager", type="integer", nullable=true)
@@ -155,14 +160,14 @@ class Respondent
         $this->response = $response;
     }
 
-    public function getRevived()
+    public function getRevivedCount()
     {
-        return $this->revived;
+        return $this->revivedCount;
     }
 
-    public function setRevived($revived)
+    public function setRevivedCount($revivedCount)
     {
-        $this->revived = $revived;
+        $this->revivedCount = $revivedCount;
     }
 
     public function getStartDate()
@@ -193,6 +198,16 @@ class Respondent
     public function setCreatedDate($createdDate)
     {
         $this->createdDate = $createdDate;
+    }
+
+    public function getLastConnectionDate()
+    {
+        return $this->lastConnectionDate;
+    }
+
+    public function setLastConnectionDate($lastConnectionDate)
+    {
+        $this->lastConnectionDate = $lastConnectionDate;
     }
 
     public function getExportDates()
