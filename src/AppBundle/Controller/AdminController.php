@@ -13,10 +13,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Constraints\EmailValidator;
 
 class AdminController extends Controller
 {
+    const FILTER_ALL = 'all';
+    CONST FILTER_MANAGER_UNDER_COLLABORATORS_COUNT = 'manager_with_few_collabs';
+    CONST FILTER_PREVIOUSLY_INSERTED_KEYS = 'previously_inserted_keys';
+    CONST FILTER_UNCONNECTED_SINCE_TEN_DAYS = 'unconnected_since_ten_days';
+
     /**
      * @Route("/admin", name="admin_homepage")
      */
@@ -143,36 +147,25 @@ class AdminController extends Controller
      */
     public function listAction(Request $request, $_format, $filter, $page)
     {
-        $em    = $this->get('doctrine.orm.entity_manager');
-        $query = $dql = null;
-        $params = [];
+        $repo = $this->get('doctrine.orm.entity_manager')->getRepository(Respondent::class);
         switch ($filter) {
-            case 'manager_under_five_collabs':
-                $query = $em->createQueryBuilder()
-                    ->select('r')
-                    ->from('AppBundle:Respondent','r')
-                    ->leftJoin('r.subordinates', 's')
-                    ->having('count(s.id) < 5')
-                    ->where('r.feedbackTeam = 1')
-                    ->groupBy('r.id')
-                    ->getQuery();
+            case self::FILTER_ALL:
+                $query = $repo->getQueryAll();
                 break;
-            case 'all':
-                $dql = "SELECT r FROM AppBundle:Respondent r";
+            case self::FILTER_MANAGER_UNDER_COLLABORATORS_COUNT:
+                $query = $repo->getQueryManagerUnderCollaboratorsCount(5);
                 break;
-            case 'previously_inserted_keys':
-                $dql = "SELECT r FROM AppBundle:Respondent r WHERE r.key IN (:keys)";
-                $params['keys'] = $this->get('session')->get('previously_inserted_keys');
+            case self::FILTER_PREVIOUSLY_INSERTED_KEYS:
+                $query = $repo->getQueryKeyList($this->get('session')->get('previously_inserted_keys'));
+                break;
+            case self::FILTER_UNCONNECTED_SINCE_TEN_DAYS:
+                $query = $repo->getQueryUnconnectedSinceXDays(10);
                 break;
             default:
                 throw new \Exception(sprintf(
                     'Cannot understand filter «%s»',
                     $filter
                 ));
-        }
-        if (!$query) {
-            $query = $em->createQuery($dql);
-            $query->setParameters($params);
         }
 
         if ($_format == 'html') {

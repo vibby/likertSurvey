@@ -50,9 +50,9 @@ class Respondent
     private $isFinished;
 
     /**
-     * @ORM\Column(name="email_dates", type="array")
+     * @ORM\Column(name="export_dates", type="array")
      */
-    private $emailDates;
+    private $exportDates;
 
     /**
      * @ORM\Column(name="date_finish", type="datetime", nullable=true)
@@ -195,20 +195,20 @@ class Respondent
         $this->createdDate = $createdDate;
     }
 
-    public function getEmailDates()
+    public function getExportDates()
     {
         return array_map(
             function ($timestamp) {
                 $date = new \DateTime();
                 return $date->setTimestamp($timestamp);
             },
-            $this->emailDates
+            $this->exportDates
         );
     }
 
     public function addEmailDate(\DateTime $date)
     {
-        $this->emailDates[] = $date->getTimestamp();
+        $this->exportDates[] = $date->getTimestamp();
     }
 
     public function setFinished($finished)

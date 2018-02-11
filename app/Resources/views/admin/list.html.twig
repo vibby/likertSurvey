@@ -40,8 +40,13 @@
             </a>
         </li>
         <li>
-            <a href="{{ path('admin_list', {'filter': 'manager_under_five_collabs'}) }}">
+            <a href="{{ path('admin_list', {'filter': 'manager_with_few_collabs'}) }}">
                 Les managers qui n’ont pas les réponses de 5 collaborateurs
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('admin_list', {'filter': 'unconnected_since_ten_days'}) }}">
+                Les répondants non connectés depuis 10 jours
             </a>
         </li>
         {% if app.session.get('previously_inserted_keys') %}
