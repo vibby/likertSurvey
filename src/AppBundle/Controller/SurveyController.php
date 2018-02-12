@@ -85,8 +85,41 @@ class SurveyController extends Controller
         $isLastPage = false;
 
         if ($idPage <= count($likertQuestions)) {
+            // Find order of questions
             $questions = $likertQuestions['page'. $idPage];
-            $questions = Shuffle::shuffleQuestions($questions);
+            $keysOrdered = null;
+            if (array_key_exists(
+                sprintf(
+                    'page%s_item%s',
+                    $idPage,
+                    array_keys($questions)[0]
+                ),
+                $responseData
+            )) {
+                $keysOrdered = [];
+                foreach ($responseData as $key => $response) {
+                    preg_match(
+                        sprintf('#page%s_item(.*)$#', $idPage),
+                        $key,
+                        $matches
+                    );
+                    $keysOrdered[] = $matches[1];
+                }
+            } elseif ($this->get('session')->has('keys_ordered')) {
+                $keysOrdered = $this->get('session')->get('keys_ordered');
+            }
+
+            if ($keysOrdered) {
+                $orderedQuestions = [];
+                foreach ($keysOrdered as $key) {
+                    $orderedQuestions[$key] = $questions[$key];
+                }
+                $questions = $orderedQuestions;
+            } else {
+                $questions = Shuffle::shuffleQuestions($questions);
+                $this->get('session')->set('keys_ordered', array_keys($questions));
+            }
+
             foreach($questions as $qKey => $likertQuestion) {
                 $choices = $this->getChoicesFromScale($likertQuestion);
                 $formBuilder->add( 'page'.$idPage.'_item'.$qKey , Type\ChoiceType::class, array(
@@ -100,8 +133,8 @@ class SurveyController extends Controller
                     'label' => $likertQuestion['label'],
                 ));
             }
-            // dump($formBuilder);die;
         } else {
+            /*
             $sectors = array(
                 'Public',
                 'Privé',
@@ -145,6 +178,7 @@ class SurveyController extends Controller
                 "Informatique et nouvelles technologies",
                 "Autre, préciser ci-dessous",
             );
+            */
 
             $isLastPage = true;
             $formBuilder
@@ -314,7 +348,7 @@ class SurveyController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
-            $data = array_merge($responseData, $formData);
+            $data = array_merge($formData, $responseData);
             $respondent->setResponse($data);
             $em = $this->getDoctrine()->getManagerForClass(Respondent::class);
             $em->persist($respondent);
