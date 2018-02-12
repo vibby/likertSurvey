@@ -5,14 +5,17 @@ security:
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         in_memory:
-            memory: ~
-        db_provider:
-            entity:
-                class: AppBundle:User
-                property: username
+            memory:
+                users:
+                    nixie:
+                        password: $2y$13$z85rtfPRelS8uZ8jsKhFfeuifjc.AICHCk9k8cSrBb7mShLiCoMCa
+                        roles: 'ROLE_ADMIN'
+                    vibby:
+                        password: $2y$13$afGP5AVni9SueyHhHZmqM.iz4UUU1V.DQfXBQzBvA1XEs/GYxrWrC
+                        roles: 'ROLE_ADMIN'
 
     encoders:
-        AppBundle\Entity\User: bcrypt
+        Symfony\Component\Security\Core\User\User: bcrypt
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -22,6 +25,17 @@ security:
 
         main:
             anonymous: ~
+            form_login:
+                login_path: login
+                check_path: login
+                csrf_token_generator: security.csrf.token_manager
+                csrf_parameter: _tok
+#                csrf_token_id: dobiInCiVQjLApA7y7oWYElBda0qmBIlseCvHpd1
+            logout:
+                path:   /logout
+                target: /
+        main:
+            anonymous: ~
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
@@ -29,3 +43,7 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
