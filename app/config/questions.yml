@@ -67,10 +67,37 @@ parameters:
         label: "Voici une série de propositions suivies d’une échelle de réponse allant de «pas du tout d’accord» à «tout à fait d’accord». Sélectionnez la réponse qui correspond le mieux à votre opinion."
         type: separator
       q1:
-        label: "J’éprouve vraiment un sentiment d’appartenance à mon organisation"
+        label: "1 J’éprouve vraiment un sentiment d’appartenance à mon organisation"
         type: osgood
         scale: ok6
       q2:
-        label: "J’éprouve vraiment un sentiment d’appartenance à mon organisation"
+        label: "2 J’éprouve vraiment un sentiment d’appartenance à mon organisation"
+        type: likert
+        scale: ok6
+      q3:
+        label: "3 J’éprouve vraiment un sentiment d’appartenance à mon organisation"
+        type: osgood
+        scale: ok6
+      q4:
+        label: "4 J’éprouve vraiment un sentiment d’appartenance à mon organisation"
+        type: likert
+        scale: ok6
+      q5:
+        label: "5 J’éprouve vraiment un sentiment d’appartenance à mon organisation"
+        type: osgood
+        scale: ok6
+      q6:
+        label: "6 J’éprouve vraiment un sentiment d’appartenance à mon organisation"
+        type: likert
+        scale: ok6
+      intro1:
+        label: "Voici une série de propositions suivies d’une échelle de réponse allant de «pas du tout d’accord» à «tout à fait d’accord». Sélectionnez la réponse qui correspond le mieux à votre opinion."
+        type: separator
+      q101:
+        label: "101 J’éprouve vraiment un sentiment d’appartenance à mon organisation"
+        type: osgood
+        scale: ok6
+      q102:
+        label: "102 J’éprouve vraiment un sentiment d’appartenance à mon organisation"
         type: likert
         scale: ok6

@@ -4,11 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Respondent;
 use AppBundle\Form\IsManagerType;
-use AppBundle\Form\KeyType;
 use AppBundle\Form\SubscribeType;
+use AppBundle\Tools\Shuffle;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type;
@@ -86,7 +85,9 @@ class SurveyController extends Controller
         $isLastPage = false;
 
         if ($idPage <= count($likertQuestions)) {
-            foreach( $likertQuestions['page'. $idPage] as $qKey => $likertQuestion) {
+            $questions = $likertQuestions['page'. $idPage];
+            $questions = Shuffle::shuffleQuestions($questions);
+            foreach($questions as $qKey => $likertQuestion) {
                 $choices = $this->getChoicesFromScale($likertQuestion);
                 $formBuilder->add( 'page'.$idPage.'_item'.$qKey , Type\ChoiceType::class, array(
                     'choices' => $choices ? $choices : [],
