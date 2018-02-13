@@ -1,7 +1,13 @@
 
 {% extends "layout.html.twig" %}
 
-{% block title %}Résultats{% endblock %}
+{% block bodyClass %}admin{% endblock %}
+
+{% block title %}Création{% endblock %}
+
+{% block menus %}
+    {% include "admin/menu.html.twig" %}
+{% endblock %}
 
 {% block content %}
     {{ form_start(form) }}

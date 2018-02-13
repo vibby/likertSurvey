@@ -2,6 +2,12 @@
 
 {% block title %}Résultats{% endblock %}
 
+{% block bodyClass %}admin{% endblock %}
+
+{% block menus %}
+    {% include "admin/menu.html.twig" %}
+{% endblock %}
+
 {% block content %}
     <h1>Résultats</h1>
 
@@ -12,7 +18,7 @@
         </a>
     </div>
 
-    <table>
+    <table class="table">
         <tr>
             <th>Clé</th>
             <th>Email</th>
@@ -20,15 +26,19 @@
             <th>Email de feedback</th>
             <th>moi</th>
             <th>équipe</th>
+            <th>création</th>
+            <th>connexion</th>
         </tr>
         {% for article in pagination %}
             <tr>
-                <td>{{ article.key }}</td>
-                <td>{{ article.email }}</td>
+                <td><a href="{{ url('homepage', {'key': article.key}) }}">{{ article.key }}</a></td>
+                <td><a href="mailto://{{ article.email }}">{{ article.email }}</a></td>
                 <td>{{ article.finished }}</td>
-                <td>{{ article.emailFeedback }}</td>
+                <td><a href="mailto://{{ article.emailFeedback }}">{{ article.emailFeedback }}</a></td>
                 <td>{{ article.feedbackMyself }}</td>
                 <td>{{ article.feedbackTeam }}</td>
+                <td>{{ article.createdDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ article.lastConnectionDate|date('Y-m-d H:i:s') }}</td>
             </tr>
         {% endfor %}
     </table>

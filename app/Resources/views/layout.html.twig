@@ -29,7 +29,7 @@
 </head>
 
 
-<body>
+<body class="{% block bodyClass %}{% endblock %}">
     <header class="line mod">
         <img alt="FdF" src="http://fdf-performance-entreprise.com/wp-content/uploads/2014/07/logoFdF.png" />
         <img alt="Université de Nantes" src="http://www.univ-nantes.fr/uas/institutionnel/LOGO/logo%20un2012blanc_larg40.png" />
@@ -42,6 +42,8 @@
                 </div>
             {% endfor %}
         {% endfor %}
+        {% block menus %}
+        {% endblock %}
         {% block content %}
         {% endblock %}
     </div>

@@ -1,19 +1,26 @@
+{% extends "layout.html.twig" %}
 
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
+{% block title %}Identification{% endblock %}
 
-<form action="{{ path('login') }}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" />
+{% block bodyClass %}admin{% endblock %}
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="_password" />
+{% block content %}
+    <h1>Identification</h1>
 
-    <input type="hidden" name="_target_path" value="/admin/list" />
-    <input type="hidden" name="_tok"
-           value="{{ csrf_token('authenticate') }}"
-    >
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
 
-    <button type="submit">login</button>
-</form>
+    <form action="{{ path('login') }}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password" />
+
+        <input type="hidden" name="_target_path" value="/admin" />
+        <input type="hidden" name="_tok"value="{{ csrf_token('authenticate') }}" />
+
+        <button type="submit">login</button>
+    </form>
+{% endblock %}

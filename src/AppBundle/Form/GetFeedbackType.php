@@ -22,7 +22,7 @@ class GetFeedbackType extends AbstractType
                 EmailType::class,
                 [
                     'label' => 'Votre email',
-                    'requiread' => false,
+                    'required' => false,
                 ]
             )
             ->add(

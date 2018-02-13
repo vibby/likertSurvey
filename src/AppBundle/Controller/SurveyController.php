@@ -348,7 +348,7 @@ class SurveyController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
-            $data = array_merge($formData, $responseData);
+            $data = array_merge($responseData, $formData);
             $respondent->setResponse($data);
             $em = $this->getDoctrine()->getManagerForClass(Respondent::class);
             $em->persist($respondent);
@@ -378,7 +378,7 @@ class SurveyController extends Controller
 //                    ->setBody("Une nouvelle réponse au formulaire :\n\n".$dataList);
 //                $this->get('mailer')->send($message);
 
-                $path = $this->container->getParameter('kernel.root_dir'). '/../app/Responses/';
+                $path = $this->container->getParameter('kernel.root_dir'). '/../app/data/responses/';
                 $handle = fopen($path. '_toutes.csv', 'a');
                 fputcsv($handle, $data, ';');
                 fclose($handle);

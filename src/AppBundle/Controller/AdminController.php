@@ -22,16 +22,6 @@ class AdminController extends Controller
     CONST FILTER_UNCONNECTED_SINCE_TEN_DAYS = 'unconnected_since_ten_days';
 
     /**
-     * @Route("/admin", name="admin_homepage")
-     */
-    public function indexAction(Request $request)
-    {
-        return $this->render('index.html.twig', [
-            'dataFound' => $this->get('session')->get('data') ? true : false,
-        ]);
-    }
-
-    /**
      * @Route("/admin/register", name="admin_registration")
      *
      * @param Request $request
@@ -131,7 +121,7 @@ class AdminController extends Controller
 
     /**
      * @Route(
-     *     "/admin/list/{filter}{page}.{_format}",
+     *     "/admin/{filter}{page}.{_format}",
      *     name="admin_list",
      *     defaults={
      *         "_format": "html",

@@ -37,6 +37,12 @@ body {
     max-width: 960px;
     margin: auto;
 }
+body.admin {
+    max-width: 96vw;
+}
+body.admin header {
+    max-width: 960px;
+s}
 @media screen and (max-width: 400px) {
     h1{
         font-size: 1em;
@@ -375,4 +381,10 @@ input.button {
     display: inline-block;
 }
 
-
+.table {
+    border-collapse: collapse;
+}
+.table td {
+    border: 1px solid #333;
+    padding: .3em;
+}
