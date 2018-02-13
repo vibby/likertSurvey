@@ -388,3 +388,8 @@ input.button {
     border: 1px solid #333;
     padding: .3em;
 }
+
+header img:first-child {
+    background: rgba(255,255,255,.9);
+    padding: 1em;
+}

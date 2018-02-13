@@ -22,6 +22,7 @@ class IsManagerType extends AbstractType
                         'Non' => 0,
                     ],
                     'label'=>'Avez-vous des fonctions d’encadrement / de management ?',
+                    'expanded' => true,
                 ]
             )
             ->add('ok', SubmitType::class)

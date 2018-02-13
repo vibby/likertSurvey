@@ -71,12 +71,14 @@ class SurveyController extends Controller
         $found = false;
         do {
             $idPage++;
-            if (!array_key_exists('page'. $idPage, $likertQuestions))
+            if (!array_key_exists('page' . $idPage, $likertQuestions)) {
                 $found = true;
-            else foreach ($likertQuestions['page'. $idPage] as $qKey => $likertQuestion) {
-                $responseKey = 'page'. $idPage.'_item'.$qKey;
-                if (!array_key_exists($responseKey, $responseData) || ($responseData[$responseKey] === null && $likertQuestion['type'] !== 'separator')) {
-                    $found = true;
+            } else {
+                foreach ($likertQuestions['page'. $idPage] as $qKey => $likertQuestion) {
+                    $responseKey = 'page' . $idPage . '_item' . $qKey;
+                    if (!array_key_exists($responseKey, $responseData) || ($responseData[$responseKey] === null && $likertQuestion['type'] !== 'separator')) {
+                        $found = true;
+                    }
                 }
             }
         } while (array_key_exists('page'. $idPage, $likertQuestions) && !$found);
@@ -103,7 +105,9 @@ class SurveyController extends Controller
                         $key,
                         $matches
                     );
-                    $keysOrdered[] = $matches[1];
+                    if (isset($matches[1])) {
+                        $keysOrdered[] = $matches[1];
+                    }
                 }
             } elseif ($this->get('session')->has('keys_ordered')) {
                 $keysOrdered = $this->get('session')->get('keys_ordered');
@@ -379,7 +383,7 @@ class SurveyController extends Controller
 //                $this->get('mailer')->send($message);
 
                 $path = $this->container->getParameter('kernel.root_dir'). '/../app/data/responses/';
-                $handle = fopen($path. '_toutes.csv', 'a');
+                $handle = fopen($path. '_all.csv', 'a');
                 fputcsv($handle, $data, ';');
                 fclose($handle);
 

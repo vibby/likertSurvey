@@ -23,7 +23,7 @@ class AfterController extends Controller
             $form = $this->createForm(GetFeedbackType::class, $respondent);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-//                $this->get('session')->set('respondentId', null);
+                $this->get('session')->set('respondentId', null);
                 $em = $this->getDoctrine()->getManager();
                 foreach ($form['colleagues']->getData() as $colleague) {
                     $em->persist($colleague);
