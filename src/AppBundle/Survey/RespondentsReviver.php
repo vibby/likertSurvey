@@ -15,11 +15,18 @@ class RespondentsReviver
 
     private $kernel;
 
-    public function __construct(EntityManager $entityManager, Environment $twig, KernelInterface $kernel)
-    {
+    private $adminEmailer;
+
+    public function __construct(
+        EntityManager $entityManager,
+        Environment $twig,
+        KernelInterface $kernel,
+        AdminMailer $adminEmailer
+    ) {
         $this->entityManager = $entityManager;
         $this->twig = $twig;
         $this->kernel = $kernel;
+        $this->adminEmailer = $adminEmailer;
     }
 
     public function revive()
@@ -27,7 +34,7 @@ class RespondentsReviver
         $days = 10;
         $from = new \DateTime();
         $filename = sprintf(
-            '%s/exports/revive_%s.csv',
+            '%s/data/exports/revive_%s.csv',
             $this->kernel->getRootDir(),
             $from->format('Y-m-d_h-i-s')
         );
@@ -42,7 +49,6 @@ class RespondentsReviver
                 ['respondents' => $respondents]
             )
         );
-
-        return $filename;
+        $this->adminEmailer->sendWithFile($filename);
     }
 }
