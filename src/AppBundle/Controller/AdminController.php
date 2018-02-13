@@ -75,6 +75,7 @@ class AdminController extends Controller
                 $respondent = new Respondent();
                 $respondent->setEmail($email);
                 $respondent->setSource('admin');
+                $respondent->setDomain($request->getHost());
                 $em->persist($respondent);
                 $respondents[] = $respondent;
             }

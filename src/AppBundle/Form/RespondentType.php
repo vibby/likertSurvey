@@ -9,11 +9,19 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
 class RespondentType extends AbstractType
 {
+    private $request;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->request = $requestStack->getCurrentRequest();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -28,6 +36,7 @@ class RespondentType extends AbstractType
                         ? $options['attr']['source']
                         : 'unknown'
                     );
+                    $data->setSource($this->request->getBaseUrl());
                     $event->setData($data);
                 }
             )

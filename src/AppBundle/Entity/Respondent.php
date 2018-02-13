@@ -100,6 +100,11 @@ class Respondent
     private $source;
 
     /**
+     * @ORM\Column(name="domain", type="string", length=10, nullable=false)
+     */
+    private $domain;
+
+    /**
      * @ORM\OneToMany(targetEntity="Respondent", mappedBy="manager")
      */
     private $subordinates;
@@ -248,6 +253,16 @@ class Respondent
     public function getSource()
     {
         return $this->source;
+    }
+
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+    }
+
+    public function getDomain()
+    {
+        return $this->domain;
     }
 
     public function setFeedbackMyself($feedbackMyself)

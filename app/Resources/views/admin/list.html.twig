@@ -29,18 +29,20 @@
             <th>création</th>
             <th>connexion</th>
             <th>source</th>
+            <th>domaine</th>
         </tr>
         {% for respondent in pagination %}
             <tr>
                 <td><a href="{{ url('homepage', {'key': respondent.key}) }}">{{ respondent.key }}</a></td>
-                <td><a href="mailto://{{ respondent.email }}">{{ respondent.email }}</a></td>
+                <td><a href="mailto:{{ respondent.email }}">{{ respondent.email }}</a></td>
                 <td>{{ respondent.finished }}</td>
-                <td><a href="mailto://{{ respondent.emailFeedback }}">{{ respondent.emailFeedback }}</a></td>
+                <td><a href="mailto:{{ respondent.emailFeedback }}">{{ respondent.emailFeedback }}</a></td>
                 <td>{{ respondent.feedbackMyself }}</td>
                 <td>{{ respondent.feedbackTeam }}</td>
                 <td>{{ respondent.createdDate|date('Y-m-d H:i:s') }}</td>
                 <td>{{ respondent.lastConnectionDate|date('Y-m-d H:i:s') }}</td>
                 <td>{{ respondent.source }}</td>
+                <td>{{ respondent.domain }}</td>
             </tr>
         {% endfor %}
     </table>
