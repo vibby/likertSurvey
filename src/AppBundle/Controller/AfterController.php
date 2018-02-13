@@ -28,6 +28,9 @@ class AfterController extends Controller
                 foreach ($form['colleagues']->getData() as $colleague) {
                     $em->persist($colleague);
                 }
+                foreach ($form['subordinates']->getData() as $subordinate) {
+                    $em->persist($subordinate);
+                }
                 $em->persist($respondent);
                 $em->flush();
 

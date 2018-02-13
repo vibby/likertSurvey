@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Respondent;
 use AppBundle\Entity\User;
 use AppBundle\Form\ManyRespondentType;
-use AppBundle\Form\RespondentType;
 use AppBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,31 +59,6 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/admin/create", name="admin_create")
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function createAction(Request $request)
-    {
-        $respondent = new Respondent();
-        $form = $this->createForm(RespondentType::class, $respondent);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($respondent);
-            $em->flush();
-
-            return $this->redirectToRoute('admin_list');
-        }
-
-        return $this->render(
-            'admin/create.html.twig',
-            array('form' => $form->createView())
-        );
-    }
-
-    /**
      * @Route("/admin/createMany", name="admin_create_many")
      *
      * @param Request $request
@@ -100,6 +74,7 @@ class AdminController extends Controller
             foreach ($form->getData()['emails'] as $email) {
                 $respondent = new Respondent();
                 $respondent->setEmail($email);
+                $respondent->setSource('admin');
                 $em->persist($respondent);
                 $respondents[] = $respondent;
             }

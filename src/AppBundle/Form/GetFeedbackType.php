@@ -46,6 +46,11 @@ class GetFeedbackType extends AbstractType
                 CollectionType::class,
                 array(
                     'entry_type' => RespondentType::class,
+                    'entry_options' => [
+                        'attr' => [
+                            'source' => 'addSubord',
+                        ]
+                    ],
                     'required'  => false,
                     'label' => 'Mes collaborateurs',
                     'allow_add' => true,
@@ -58,6 +63,9 @@ class GetFeedbackType extends AbstractType
                 array(
                     'required'  => false,
                     'label' => 'Mon manager',
+                    'attr' => [
+                        'source' => 'addManager'
+                    ]
                 )
             )
             ->add(
@@ -65,6 +73,11 @@ class GetFeedbackType extends AbstractType
                 CollectionType::class,
                 array(
                     'entry_type' => RespondentType::class,
+                    'entry_options' => [
+                        'attr' => [
+                            'source' => 'addColleag',
+                        ]
+                    ],
                     'required'  => false,
                     'label' => 'Mes collègues',
                     'allow_add' => true,

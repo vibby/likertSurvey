@@ -94,7 +94,11 @@ class Respondent
      */
     private $isManager;
 
-    // ...
+    /**
+     * @ORM\Column(name="source", type="string", length=10, nullable=false)
+     */
+    private $source;
+
     /**
      * @ORM\OneToMany(targetEntity="Respondent", mappedBy="manager")
      */
@@ -234,6 +238,16 @@ class Respondent
     public function isFinished()
     {
         return $this->isFinished;
+    }
+
+    public function setSource($source)
+    {
+        $this->source = $source;
+    }
+
+    public function getSource()
+    {
+        return $this->source;
     }
 
     public function setFeedbackMyself($feedbackMyself)

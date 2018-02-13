@@ -28,17 +28,19 @@
             <th>équipe</th>
             <th>création</th>
             <th>connexion</th>
+            <th>source</th>
         </tr>
-        {% for article in pagination %}
+        {% for respondent in pagination %}
             <tr>
-                <td><a href="{{ url('homepage', {'key': article.key}) }}">{{ article.key }}</a></td>
-                <td><a href="mailto://{{ article.email }}">{{ article.email }}</a></td>
-                <td>{{ article.finished }}</td>
-                <td><a href="mailto://{{ article.emailFeedback }}">{{ article.emailFeedback }}</a></td>
-                <td>{{ article.feedbackMyself }}</td>
-                <td>{{ article.feedbackTeam }}</td>
-                <td>{{ article.createdDate|date('Y-m-d H:i:s') }}</td>
-                <td>{{ article.lastConnectionDate|date('Y-m-d H:i:s') }}</td>
+                <td><a href="{{ url('homepage', {'key': respondent.key}) }}">{{ respondent.key }}</a></td>
+                <td><a href="mailto://{{ respondent.email }}">{{ respondent.email }}</a></td>
+                <td>{{ respondent.finished }}</td>
+                <td><a href="mailto://{{ respondent.emailFeedback }}">{{ respondent.emailFeedback }}</a></td>
+                <td>{{ respondent.feedbackMyself }}</td>
+                <td>{{ respondent.feedbackTeam }}</td>
+                <td>{{ respondent.createdDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ respondent.lastConnectionDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ respondent.source }}</td>
             </tr>
         {% endfor %}
     </table>

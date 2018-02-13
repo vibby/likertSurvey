@@ -23,7 +23,7 @@ class AccessController extends Controller
      *         "key": "",
      *     },
      *     requirements={
-     *         "key": "[^/]{8}"
+     *         "key": ".{8}"
      *     }
      * )
      */
@@ -41,13 +41,18 @@ class AccessController extends Controller
         $em = $this->getDoctrine()->getManager();
         if ($keyForm->isSubmitted() && $keyForm->isValid()) {
             /** @var Respondent $respondent */
-            $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $keyForm->getData()['key']]);
+            $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(
+                ['key' => $keyForm->getData()['key']]
+            );
             if (!$respondent) {
                 $this->get('session')->set('lastKeyFormError', 'Cette clé n’a pas été trouvée.');
 
                 return $this->redirectToRoute('homepage');
             } elseif ($respondent->isFinished()) {
-                $this->get('session')->set('lastKeyFormError', 'Vous avez déjà completé le formulaire. Vous ne pouvez pas en modifier la saisie.');
+                $this->get('session')->set(
+                    'lastKeyFormError',
+                    'Vous avez déjà completé le formulaire. Vous ne pouvez pas en modifier la saisie.'
+                );
 
                 return $this->redirectToRoute('homepage');
             } else {
@@ -66,16 +71,12 @@ class AccessController extends Controller
         }
 
         $respondent = new Respondent();
-        $registerForm = $this->createForm(RespondentType::class, $respondent);
+        $registerForm = $this->createForm(RespondentType::class, $respondent, ['attr' => ['source' => 'homepage']]);
         $registerForm->handleRequest($request);
         if ($registerForm->isSubmitted() && $registerForm->isValid()) {
 
             $em->persist($respondent);
             $em->flush();
-
-            if (isset($request->request->get('respondent')['sendEmail'])) {
-                dump('send');
-            }
 
             $this->addFlash('success', 'La clé d’activaction vous sera prochainement tramsmise par courriel');
 
