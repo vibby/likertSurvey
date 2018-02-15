@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="app_respondent")
+ * @ORM\Table(name="likertsurvey_respondent")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RespondentRepository")
  * @UniqueEntity(fields={"email"}, message="This email is already used.")
  * @UniqueEntity(fields={"key"}, message="The generated key is already used.")
