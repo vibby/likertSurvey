@@ -3,7 +3,7 @@
 namespace AppBundle\Survey;
 
 use AppBundle\Entity\Respondent;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Twig\Environment;
 
@@ -18,7 +18,7 @@ class RespondentsReviver
     private $adminEmailer;
 
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         Environment $twig,
         KernelInterface $kernel,
         AdminMailer $adminEmailer
@@ -34,21 +34,23 @@ class RespondentsReviver
         $days = 10;
         $from = new \DateTime();
         $filename = sprintf(
-            '%s/data/exports/revive_%s.csv',
-            $this->kernel->getRootDir(),
+            'revive_%s.csv',
             $from->format('Y-m-d_h-i-s')
+        );
+        $fullFilename = sprintf(
+            '%s/data/exports/%s',
+            $this->kernel->getRootDir(),
+            $filename
         );
         $from->sub(new \DateInterval(sprintf('P%sD', $days)));
         $repo = $this->entityManager->getRepository(Respondent::class);
         $repo->updateIncrementExport($from);
         $respondents = $repo->getQueryUnconnectedSinceXDays($from)->getResult();
-        file_put_contents(
-            $filename,
-            $this->twig->render(
-                'admin/list.csv.twig',
-                ['respondents' => $respondents]
-            )
+        $content = $this->twig->render(
+            'admin/list.csv.twig',
+            ['respondents' => $respondents]
         );
-        $this->adminEmailer->sendWithFile($filename);
+        file_put_contents($fullFilename, $content);
+        $this->adminEmailer->sendWithFile($content, $filename, 'LikertSurvey Daily report');
     }
 }

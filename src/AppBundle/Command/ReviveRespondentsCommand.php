@@ -21,7 +21,7 @@ class ReviveRespondentsCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:revive-respondents')
+            ->setName('likert-survey:revive-respondents')
             ->setDescription('Send email alerts to revive respondants')
             ->setHelp('This command send an email that contains a csv with respondents inactive since a long time')
         ;
@@ -29,8 +29,7 @@ class ReviveRespondentsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        ;
-        $output->writeln($this->respondentsReviver->revive());
-        $output->writeln('ok');
+        $this->respondentsReviver->revive();
+        $output->writeln('Finished');
     }
 }
