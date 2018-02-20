@@ -4,11 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Respondent;
 use AppBundle\Form\IsManagerType;
-use AppBundle\Form\SubscribeType;
+use AppBundle\Form\YearsMonthsType;
 use AppBundle\Tools\Shuffle;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\HttpFoundation\Response;
@@ -138,82 +137,125 @@ class SurveyController extends Controller
                 ));
             }
         } else {
-            /*
-            $sectors = array(
-                'Public',
-                'Privé',
-                'Parapublic',
+            $salaries = array(
+                1 => '< 19 999€',
+                2 => '20 000€ - 29 999€',
+                3 => '30 000€ - 39 999€',
+                4 => '40 000€ - 49 999€',
+                5 => '50 000€ - 59 999€',
+                6 => '60 000€ - 69 999€',
+                7 => '70 000€ - 79 999€',
+                8 => '80 000€ - 89 999€',
+                9 => '90 000€ - 99 999€',
+                10 => '≥ 100 000€',
+            );
+            $studyLevels = array(
+                6 => 'Collège (classes de 6ème à 3ème)',
+                5 => 'CAP, BEP, Diplôme National de Brevet ou équivalents',
+                4 => 'Bac (général, technique ou professionnel), Brevet de Technicien, Brevet Professionnel',
+                3 => 'Bac + 2 : Licence 2, BTS, DUT',
+                2 => 'Bac + 3 et Bac + 4 : Licence 3, Licence professionnelle, Maîtrise / Master 1',
+                1 => 'Bac + 5 ou plus : Master 2, Doctorat, diplômes d’école…',
             );
             $jobs = array(
-                "Agriculteurs exploitants",
-                "Artisans",
-                "Commerçants et assimilés",
-                "Chefs d'entreprise de plus de 10 salariés ou plus",
-                "Professions libérales et assimilés",
-                "Cadres de la fonction publique, professions intellectuelles et artistiques",
-                "Cadres d'entreprise",
-                "Professions intermédiaires de l'enseignement, de la santé, de la fonction publique et assimilés",
-                "Professions intermédiaires administratives et commerciales des entreprises",
-                "Techniciens",
-                "Contremaîtres, agents de maîtrise",
-                "Employés de la fonction publique",
-                "Employés administratifs d'entreprise",
-                "Employés de commerce",
-                "Personnels de services directs aux particuliers",
-                "Ouvriers qualifiés",
-                "Ouvriers non qualifiés",
-                "Ouvriers agricoles"
+                1 => 'Artisans',
+                2 => 'Commerçants et assimilés',
+                3 => 'Chefs d’entreprise',
+                4 => 'Professions libérales et assimilés',
+                5 => 'Cadres de la fonction publique, professions intellectuelles et artistiques',
+                6 => 'Cadres d’entreprise',
+                7 => 'Professions intermédiaires de l’enseignement, de la santé, de la fonction publique et assimilés',
+                8 => 'Professions intermédiaires administratives et commerciales des entreprises',
+                9 => 'Techniciens',
+                10 => 'Contremaîtres, agents de maîtrise',
+                11 => 'Employés de la fonction publique',
+                12 => 'Employés administratifs d’entreprise',
+                13 => 'Employés de commerce',
+                14 => 'Personnels des services directs aux particuliers',
+                15 => 'Ouvriers',
             );
-            $domains = array(
-                "Agriculture",
-                "Industrie",
-                "Électricité, gaz et eau",
-                "Construction",
-                "Commerce",
-                "Hôtels et restaurants",
-                "Transport",
-                "Communication",
-                "Finances, banques et assurances",
-                "Immobilier",
-                "Administration publique",
-                "Education - Enseignement",
-                "Social - Aide aux personnes",
-                "Santé",
-                "Informatique et nouvelles technologies",
-                "Autre, préciser ci-dessous",
+            $sectors = array(
+                'A' => 'Agriculture, sylviculture et pêche',
+                'B' => 'Industries extractives',
+                'C' => 'Industries manufacturières',
+                'D' => 'Production et distribution d’électricité, de gaz, de vapeur et d’air conditionné',
+                'E' => 'Production et distribution d’eau ; assainissement, gestion des déchets et dépollution',
+                'F' => 'Construction',
+                'G' => 'Commerce ; réparation d’automobiles et de motocycles',
+                'H' => 'Transports et entreposage',
+                'I' => 'Hébergement et restauration',
+                'J' => 'Information et communication',
+                'K' => 'Activités financières et d’assurance',
+                'L' => 'Activités immobilières',
+                'M' => 'Activités spécialisées, scientifiques et techniques',
+                'N' => 'Activités de services administratifs et de soutien',
+                'O' => 'Administration publique',
+                'P' => 'Enseignement',
+                'Q' => 'Santé humaine et action sociale',
+                'R' => 'Arts, spectacles et activités récréatives',
+                'S' => 'Autres activités de services',
             );
-            */
+            $sizes = array(
+                1 => 'Petite entreprise, 1–9 salariés',
+                2 => 'Moyenne Entreprise, 10–49 salariés',
+                3 => 'Entreprise de Taille Intermédiaire (ETI), 50–249 salariés',
+                4 => 'Grande entreprise, 250 salariés ou plus',
+            );
+            $telework = array(
+                0 => 'Non',
+                1 => 'Oui, mais je n’en fait pas',
+                2 => 'Oui, 1 à 3 jours / mois',
+                3 => 'Oui, 1 jour / semaine',
+                4 => 'Oui, 2 jours / semaine',
+                5 => 'Oui, 3 jours / semaine',
+                6 => 'Oui, 4 jours / semaine',
+                7 => 'Oui, 5 jours ou plus par semaine',
+            );
 
             $isLastPage = true;
             $formBuilder
-                ->add( 'age', Type\IntegerType::class, array(
-                    'label' => "Votre age",
-                    'required' => true,
-                ))
                 ->add( 'Sexe', Type\ChoiceType::class, array(
                     'placeholder' => '-sélectionner-',
                     'choices' => array_flip(array('Homme','Femme')) ,
                     'expanded' => true,
                     'multiple' => false,
                     'constraints' => new Assert\Choice(array(0,1)),
-                    'label' => "Sexe :",
+                    'label' => "Genre",
                     'required' => true,
                 ))
-                /*
-                ->add( 'Situation_famille', Type\ChoiceType::class, array(
+                ->add( 'age', Type\IntegerType::class, array(
+                    'label' => "Votre age",
+                    'required' => true,
+                ))
+                ->add('Duree_societe', YearsMonthsType::class, array(
+                    'label' => "Depuis combien de temps travaillez-vous dans votre entreprise actuelle ?",
+                    'required' => true,
+                ))
+                ->add('Duree_poste', YearsMonthsType::class, array(
+                    'label' => "Depuis combien de temps travaillez-vous à votre poste actuel ?",
+                    'required' => true,
+                ))
+                ->add('Duree_management', YearsMonthsType::class, array(
+                    'label' => "Dans votre vie professionnelle, combien de temps au total avez-vous exercé des fonctions d’encadrement/de management (dans cette entreprise ou dans d’autres) ?",
+                    'required' => true,
+                ))
+                ->add( 'Salaire', Type\ChoiceType::class, array(
                     'placeholder' => '-sélectionner-',
-                    'choices' => array_flip(array('Seul','En couple')) ,
-                    'expanded' => true,
+                    'choices' => array_flip($salaries) ,
+                    'expanded' => false,
                     'multiple' => false,
-                    'constraints' => new Assert\Choice(array(0,1)),
-                    'label' => "Situation familiale :",
+                    'constraints' => new Assert\Choice(array_keys($salaries)),
+                    'label' => "Quel est votre salaire annuel imposable ?",
                     'required' => true,
                 ))
-                ->add( 'Nombre_enfants_a_charge', Type\ChoiceType::class, array(
-                    'constraints' => new Assert\Type('Integer', 'Cette valeur doit être un nombre entier'),
-                    'label' => "Nombre d'enfants ou de personnes à votre charge :",
+                ->add( 'Niveau_etude', Type\ChoiceType::class, array(
                     'placeholder' => '-sélectionner-',
-                    'choices' => range(0, 10)
+                    'choices' => array_flip($studyLevels) ,
+                    'expanded' => false,
+                    'multiple' => false,
+                    'constraints' => new Assert\Choice(array_keys($studyLevels)),
+                    'label' => "Quel est votre niveau d’études ?",
+                    'required' => true,
                 ))
                 ->add( 'Profession', Type\ChoiceType::class, array(
                     'placeholder' => '-sélectionner-',
@@ -221,7 +263,7 @@ class SurveyController extends Controller
                     'expanded' => false,
                     'multiple' => false,
                     'constraints' => new Assert\Choice(array_keys($jobs)),
-                    'label' => "Quelle est votre profession ?",
+                    'label' => "Choisissez dans le menu déroulant la catégorie socio-professionnelle qui correspond le mieux à votre activité professionnelle",
                     'required' => true,
                 ))
                 ->add( 'Secteur', Type\ChoiceType::class, array(
@@ -230,123 +272,40 @@ class SurveyController extends Controller
                     'expanded' => false,
                     'multiple' => false,
                     'constraints' => new Assert\Choice(array_keys($sectors)),
-                    'label' => "Quel est le type de secteur de votre entreprise ?",
+                    'label' => "Indiquez le secteur d’activité de votre entreprise actuelle",
                     'required' => true,
                 ))
-                ->add( 'Intitule_poste', Type\TextType::class, array(
-                    'label' => "Quel est l'intitulé exact de votre poste actuel ?",
+                ->add( 'Secteur', Type\ChoiceType::class, array(
+                    'placeholder' => '-sélectionner-',
+                    'choices' => array_flip($sizes) ,
+                    'expanded' => false,
+                    'multiple' => false,
+                    'constraints' => new Assert\Choice(array_keys($sizes)),
+                    'label' => "Indiquez la taille de votre entreprise actuelle",
                     'required' => true,
                 ))
                 ->add( 'Heures_travail_semaine', Type\IntegerType::class, array(
-                    'label' => "Combien d'heures par semaine travaillez-vous ?",
+                    'label' => "Indiquez votre nombre moyen d’heures travaillées par semaine",
                     'required' => true,
                 ))
-                ->add( 'Heures_travail_mois', Type\IntegerType::class, array(
-                    'label' => "Combien d'heures supplémentaires effectuez-vous par mois, environ ?",
+                ->add( 'Taille_equipe', Type\IntegerType::class, array(
+                    'label' => "Indiquez la taille de votre équipe de travail",
                     'required' => true,
                 ))
-                ->add( 'travaillez_vous', Type\ChoiceType::class, array(
+                ->add( 'Teletravail', Type\ChoiceType::class, array(
                     'placeholder' => '-sélectionner-',
-                    'label' => 'Travaillez-vous',
-                    'required' => true,
-                    'choices' => array_flip(array(
-                        'de jour',
-                        'de nuit',
-                        'en 2/8',
-                        'en 3/8',
-                        'autre (précisez)',
-                    ))
-                ))
-                ->add('travaillez_vous_other', Type\TextType::class, array(
-                    'label' => 'Si autre, précisez',
-                    'required' => false,
-                ))
-                ->add( 'Satisfaction_salaire', Type\ChoiceType::class, array(
-                    'label' => "Êtes-vous satisfait(e) de votre salaire net mensuel ?",
-                    'required' => true,
-                    'expanded' => true,
-                    'choices' => array_flip(array(
-                        'oui',
-                        'non',
-                    ))
-                ))
-                */
-            ;
-
-            /** @var FormFactory $formFactory */
-            /*
-            $formFactory = $this->get('form.factory');
-            $formBuilder2 = $formFactory
-                ->createNamedBuilder('Duree_poste', Type\FormType::class, array(
-                    'label' => "Depuis quand travaillez-vous à votre poste actuel (années et mois) ?",
-                    'required' => true,
-                    ))
-                ->add('Duree_poste_ans', Type\ChoiceType::class, array(
-                    'label' => ' ',
-                    'required' => true,
-                    'placeholder' => '-années-',
-                    'choices' => range(0, 45)
-                    ))
-                ->add('Duree_poste_mois', Type\ChoiceType::class, array(
-                    'label' => ' ',
-                    'required' => true,
-                    'placeholder' => '-mois-',
-                    'choices' => range(0, 11)
-                    ))
-            ;
-            $formBuilder3 = $this->get('form.factory')
-                ->createNamedBuilder('Duree_societe', Type\FormType::class, array(
-                    'label' => "Depuis quand travaillez-vous dans votre entreprise actuel (années et mois) ?",
-                    'required' => true,
-                    ))
-                ->add('Duree_societe_ans', Type\ChoiceType::class, array(
-                    'label' => ' ',
-                    'required' => true,
-                    'placeholder' => '-années-',
-                    'choices' => range(0, 45)
-                    ))
-                ->add('Duree_societe_mois', Type\ChoiceType::class, array(
-                    'label' => ' ',
-                    'required' => true,
-                    'placeholder' => '-mois-',
-                    'choices' => range(0, 11)
-                    ))
-            ;
-
-            $formBuilder
-                ->add($formBuilder2, null, array(
-                    'required' => true,
-                    ))
-                ->add($formBuilder3, null, array(
-                    'required' => true,
-                    ))
-                ->add( 'Societe', Type\TextType::class, array(
-                    'label' => "Nom de votre entreprise (facultatif) :",
-                    'required' => false ,
-                    ))
-                ->add( 'Domain', Type\ChoiceType::class, array(
-                    'choices' => array_flip($domains),
+                    'choices' => array_flip($telework) ,
                     'expanded' => false,
                     'multiple' => false,
-                    'constraints' => new Assert\Choice(array_keys($domains)),
-                    'label' => "À quelle branche appartient votre entreprise ?",
-                    'placeholder' => '-sélectionner-',
+                    'constraints' => new Assert\Choice(array_keys($telework)),
+                    'label' => "Votre entreprise propose-t-elle la possibilité de travailler à distance (télétravail) ? Si oui : En moyenne, à quelle fréquence travaillez-vous à distance ?",
                     'required' => true,
-                    ))
-                ->add( 'Domain_other', Type\TextType::class, array(
-                    'label' => "Si autre, précisez",
-                    'required' => false ,
-                    ))
-                ->add( 'Nombre_salaries_etablissement', Type\IntegerType::class, array(
-                    'label' => "Nombre de salariés dans votre  établissement (facultatif) :",
-                    'required' => false ,
-                    ))
-                ->add( 'Nombre_salaries_entreprise', Type\IntegerType::class, array(
-                    'label' => "Nombre total de salariés dans votre entreprise (facultatif) :",
-                    'required' => false ,
-                    ))
+                ))
+                ->add( 'Nb_bureau', Type\IntegerType::class, array(
+                    'label' => "Avec combien de personnes partagez-vous votre bureau ?",
+                    'required' => true,
+                ))
             ;
-            */
         }
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
