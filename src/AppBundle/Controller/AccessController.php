@@ -91,7 +91,9 @@ class AccessController extends Controller
     }
 
     /**
-     * @Route("/ie-no-more")
+     * @Route("/ie-no-more",
+     *     name="ie-no-more"
+     * )
      */
     public function ieAction()
     {
