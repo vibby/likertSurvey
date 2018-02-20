@@ -33,7 +33,7 @@ class AdminController extends Controller
             foreach ($form->getData()['emails'] as $email) {
                 $respondent = new Respondent();
                 $respondent->setEmail($email);
-                $respondent->setSource('admin');
+                $respondent->setSource(Respondent::SOURCE_ADMIN);
                 $respondent->setDomain($request->getHost());
                 $em->persist($respondent);
                 $respondents[] = $respondent;

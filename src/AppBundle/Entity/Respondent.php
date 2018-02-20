@@ -15,6 +15,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Respondent
 {
+    const SOURCE_ADMIN = 'admin';
+    const SOURCE_HOME = 'home';
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id

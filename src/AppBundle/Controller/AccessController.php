@@ -74,10 +74,10 @@ class AccessController extends Controller
         $registerForm = $this->createForm(RespondentType::class, $respondent, ['attr' => ['source' => 'homepage']]);
         $registerForm->handleRequest($request);
         if ($registerForm->isSubmitted() && $registerForm->isValid()) {
-
+            $respondent->setSource(Respondent::SOURCE_HOME);
+            $respondent->setDomain($request->getHost());
             $em->persist($respondent);
             $em->flush();
-
             $this->addFlash('success', 'La clé d’activaction vous sera prochainement tramsmise par courriel');
 
             return $this->redirectToRoute('homepage');
