@@ -103,7 +103,7 @@ class Respondent
     private $source;
 
     /**
-     * @ORM\Column(name="domain", type="string", length=10, nullable=false)
+     * @ORM\Column(name="domain", type="string", length=80, nullable=false)
      */
     private $domain;
 
