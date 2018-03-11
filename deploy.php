@@ -11,7 +11,7 @@ set('repository', 'https://github.com/vibby/likertSurvey.git');
 
 set('bin/composer', 'composer');
 
-add('shared_files', []);
+add('shared_files', ['app/config/questions.yml']);
 add('shared_dirs', []);
 
 add('writable_dirs', []);

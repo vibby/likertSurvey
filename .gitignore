@@ -1,6 +1,7 @@
 /.web-server-pid
 /app/config/parameters.yml
-/app/config/questions/*_*.yml
+/app/config/questions/*.yml
+/app/config/questions.yml
 /build/
 /phpunit.xml
 /var/*

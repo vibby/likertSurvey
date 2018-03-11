@@ -1,0 +1,174 @@
+parameters:
+  likert_scales:
+    yesno:
+      - Oui
+      - Non
+    ok4:
+      - Pas du tout d’accord
+      - Pas d’accord
+      - D’accord
+      - Tout à fait d’accord
+    ok5:
+      - Fortement en désaccord
+      - En désaccord
+      - Neutre
+      - D’accord
+      - Fortement d’accord
+    ok5.2:
+      - Pas d'accord
+      - Un peu d'accord
+      - Assez d'accord
+      - Très d'accord
+      - Tout à fait d'accord
+    ok7:
+      - Pas du tout d’accord
+      - Plutôt en désaccord
+      - Pas d’accord
+      - Neutre
+      - D’accord
+      - Plutôt d’accord
+      - Tout à fait d’accord
+    freq4:
+      - Jamais
+      - Parfois
+      - Une fois par mois
+      - Une fois par semaine
+    fewhigh5:
+      - Dans une très faible mesure
+      - Dans une faible mesure
+      - Neutre
+      - Dans une large mesure
+      - Dans une très large mesure
+    freq5:
+      - Jamais
+      - Presque jamais
+      - Parfois
+      - Assez souvent
+      - Souvent
+    freq5.2:
+      - Jamais
+      - Peu souvent
+      - Modérément
+      - Souvent
+      - Toujours
+    freq7:
+      - Jamais
+      - Presque jamais
+      - Rarement
+      - Parfois
+      - Souvent
+      - Très souvent
+      - Toujours
+    yesnofreq:
+      - "Non, jamais"
+      - "Oui, rarement"
+      - "Oui, parfois"
+      - "Oui, plusieurs fois par semaine"
+      - "Oui, presque tous les jours"
+    ok6:
+      - Pas du tout d’accord
+      - Pas d’accord
+      - Plutôt en désaccord
+      - Plutôt d’accord
+      - D’accord
+      - Tout à fait d’accord
+    mesure5:
+      - Pas du tout
+      - 2
+      - 3
+      - 4
+      - Dans une très large mesure
+    qual7:
+      - Très mauvaise
+      - Mauvaise
+      - Passable
+      - Moyenne
+      - Bonne
+      - Très bonne
+      - Exceptionnelle
+    osgood6:
+      - Tout à fait d'accord
+      - 2
+      - 3
+      - 4
+      - 5
+      - Pas du tout d'accord
+    osgood10:
+      - Performance la plus mauvaise
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - Meilleure performance
+
+
+  likert_questions_common:
+    page1:
+###  Perf-coll:
+      intro1:
+        label: "Sur une échelle de 1 à 7, où 1 correspond à une performance très mauvaise, et 7 à une performance exceptionnelle, comment noteriez-vous le travail de votre équipe des 3 derniers mois sur les caractéristiques suivantes :"
+        type: separator
+
+      q1:
+        label: "Quantité du travail effectué par vottre équipe"
+        type: likert
+        scale: qual7
+
+      q2:
+        label: "Qualité de travail effectué par votre équipe"
+        type: likert
+        scale: qual7
+
+      q36:
+        label: "Au travail, je deviens contrarié(e) et triste sans que je ne sache pourquoi."
+        type: likert
+        scale: freq5
+## FIN PAS BON ##
+
+  likert_questions_collab:
+
+## Comp-hab-supervis
+    page2:
+      intro0:
+        label: ""Les énoncés de cette section portent sur votre expérience actuelle au travail. Pour chacun d’eux, cliquez sur le bouton qui reflète le mieux la fréquence à laquelle votre supérieur immédiat fait les comportements suivants. Par supérieur immédiat, nous entendons la personne à laquelle vous devez vous rapporter et/ou qui dirige votre travail.""
+        type: separator
+
+      q37:
+        label: "Mon supérieur immédiat me donne les pouvoirs d’agir qui correspondent à mes responsabilités."
+        type: likert
+        scale: freq5.2
+
+      q38:
+        label: "Mon supérieur immédiat m’aide à reconnaître mes besoins de formation."
+        type: likert
+        scale: freq5.2
+
+      q72:
+        label: "Au cours du dernier mois, combien de fois avez-vous trouvé que les difficultés s’accumulaient à un tel point que vous ne pouviez les contrôler ?"
+        type: likert
+        scale: freq5
+
+  likert_questions_manager:
+    page2:
+      intro0:
+        label: "Chaque organisation a sa propre culture composée d’un ensemble de valeurs. L’organisation attend que ses valeurs soient implicitement partagées par l’ensemble de ses membres. Veuillez indiquer si les différentes caractéristiques indiquées ci-dessous décrivent la culture organisationnelle de votre entreprise. Les réponses possibles varient entre 1 (pas du tout) à 5 (dans une très large mesure)."
+        type: separator
+      q73:
+        label: "Equitable/Juste"
+        type: osgood
+        scale: mesure5
+
+      q74:
+        label: "Respect des droits de l’individu"
+        type: osgood
+        scale: mesure5
+
+      q174:
+        label: "En surestimant le potentiel d'un collaborateur, je l'incite plus facilement au dépassement de soi."
+        type: osgood
+        scale: osgood6

@@ -48,14 +48,23 @@ class SurveyController extends Controller
     /**
      * @Route("/questionnaire/{idPage}", name="survey")
      */
-    public function questionnaireAction(Request $request, $idPage = 1)
+    public function questionnaireAction(Request $request)
     {
         if (!($respondent = $this->getRespondentFromSessionOrRedirect()) instanceof Respondent) {
             return $respondent;
         }
 
+        if ($respondent->getIsManager() === null) {
+            return $this->redirectToRoute('is_manager');
+        }
+
         $likertScales = $this->container->getParameter('likert_scales');
-        $likertQuestions = $this->container->getParameter('likert_questions');
+        $likertQuestions = array_merge(
+            $this->container->getParameter('likert_questions_common'),
+            $respondent->getIsManager()
+                ? $this->container->getParameter('likert_questions_manager')
+                : $this->container->getParameter('likert_questions_collab')
+        );
 
         if (!$respondent->getStartDate()) {
             $respondent->setStartDate(new \DateTime());
