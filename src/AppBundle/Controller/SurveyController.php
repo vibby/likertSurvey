@@ -27,9 +27,10 @@ class SurveyController extends Controller
             return $respondent;
         }
 
-        $isManagerForm = $this->createForm(IsManagerType::class);
+        $isManagerForm = $this->createForm(IsManagerType::class, $respondent);
         $isManagerForm->handleRequest($request);
         if ($isManagerForm->isSubmitted() && $isManagerForm->isValid()) {
+//            $respondent = $isManagerForm->getData();
             $em = $this->getDoctrine()->getManager();
             $em->persist($respondent);
             $em->flush();
@@ -46,7 +47,7 @@ class SurveyController extends Controller
     }
 
     /**
-     * @Route("/questionnaire/{idPage}", name="survey")
+     * @Route("/questionnaire", name="survey")
      */
     public function questionnaireAction(Request $request)
     {

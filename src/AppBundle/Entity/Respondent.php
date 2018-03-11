@@ -334,6 +334,6 @@ class Respondent
 
     public function setIsManager($isManager)
     {
-        $this->$isManager = $isManager;
+        $this->isManager = $isManager;
     }
 }

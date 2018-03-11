@@ -24,6 +24,7 @@
             <th>Email</th>
             <th>Finalisé</th>
             <th>Email de feedback</th>
+            <th>manager</th>
             <th>moi</th>
             <th>équipe</th>
             <th>création</th>
@@ -37,6 +38,7 @@
                 <td><a href="mailto:{{ respondent.email }}">{{ respondent.email }}</a></td>
                 <td>{{ respondent.finished }}</td>
                 <td><a href="mailto:{{ respondent.emailFeedback }}">{{ respondent.emailFeedback }}</a></td>
+                <td>{{ respondent.isManager }}</td>
                 <td>{{ respondent.feedbackMyself }}</td>
                 <td>{{ respondent.feedbackTeam }}</td>
                 <td>{{ respondent.createdDate|date('Y-m-d H:i:s') }}</td>
