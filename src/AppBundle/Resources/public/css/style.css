@@ -401,3 +401,15 @@ header img:first-child {
     margin-bottom: 1em;
     display: inline-block;
 }
+#form .next {
+    font-size: 9em;
+    display: block;
+    margin-top: -.5em;
+    text-align: right;
+    margin-bottom: -.2em;
+    margin-right: .1em;
+    color: #999;
+}
+#form .next:hover {
+    color: #000;
+}

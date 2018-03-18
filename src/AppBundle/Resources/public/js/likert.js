@@ -35,6 +35,9 @@ $(document).ready(function() {
   $('.nav .next').click(function() {
     next();
   });
+  $('#form .next').click(function() {
+      next();
+  });
   last();
 });
 
