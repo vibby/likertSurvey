@@ -137,14 +137,14 @@ s}
     visibility: hidden;
     position:absolute;
 }
-.osgood .choiceItem > input {
-    visibility: visible;
-    top:8px;
-    left: 130px;
-}
-.osgood .choiceItem > input + label {
-    color: transparent !important;
-}
+/*.osgood .choiceItem > input {*/
+    /*visibility: visible;*/
+    /*top:8px;*/
+    /*left: 130px;*/
+/*}*/
+/*.osgood .choiceItem > input + label {*/
+    /*color: transparent !important;*/
+/*}*/
 .choiceItem > input:checked + label {
     background: #afa;
 }

@@ -125,7 +125,9 @@ class SurveyController extends Controller
             if ($keysOrdered) {
                 $orderedQuestions = [];
                 foreach ($keysOrdered as $key) {
-                    $orderedQuestions[$key] = $questions[$key];
+                    if (isset($questions[$key])) {
+                        $orderedQuestions[$key] = $questions[$key];
+                    }
                 }
                 $questions = $orderedQuestions;
             } else {
@@ -391,8 +393,8 @@ class SurveyController extends Controller
         $likertScales = $this->container->getParameter('likert_scales');
         $scale = $likertScales[$likertQuestion['scale']];
         switch ($likertQuestion['type']) {
-            case 'likert':
             case 'osgood':
+            case 'likert':
                 return array_flip($scale);
             default:
                 throw new \Exception('Cannot understand scale type');
