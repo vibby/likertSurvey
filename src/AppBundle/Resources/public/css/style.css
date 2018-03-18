@@ -393,3 +393,11 @@ header img:first-child {
     background: rgba(255,255,255,.9);
     padding: 1em;
 }
+#is_manager {
+    padding: 1em 0 2em;
+}
+#is_manager_is_manager label {
+    margin-right: 1.5em;
+    margin-bottom: 1em;
+    display: inline-block;
+}
