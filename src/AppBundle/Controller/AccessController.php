@@ -78,7 +78,7 @@ class AccessController extends Controller
             $respondent->setDomain($request->getHost());
             $em->persist($respondent);
             $em->flush();
-            $this->addFlash('success', 'La clé d’activaction vous sera prochainement tramsmise par courriel');
+            $this->addFlash('success', 'La clé d’activation vous sera prochainement transmise par courriel');
 
             return $this->redirectToRoute('homepage');
         }
