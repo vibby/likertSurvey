@@ -23,6 +23,7 @@ $(document).ready(function() {
         // add a new subordinate form (see next code block)
         addSubForm($collectionHolder, $newLinkLi1);
     });
+    addSubForm($collectionHolder, $newLinkLi1);
 });
 
 var $addColleagueLink = $('<a href="#" class="add_colleague_link">Ajouter un collègue</a>');
@@ -46,6 +47,7 @@ $(document).ready(function() {
         // add a new colleague form (see next code block)
         addSubForm($collectionHolder, $newLinkLi2);
     });
+    addSubForm($collectionHolder, $newLinkLi2);
 });
 
 function addSubForm($collectionHolder, $newLinkLi) {
