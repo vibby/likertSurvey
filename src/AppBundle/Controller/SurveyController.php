@@ -92,7 +92,7 @@ class SurveyController extends Controller
             }
         } while (array_key_exists('page'. $idPage, $likertQuestions) && !$found);
 
-        $formBuilder = $this->createFormBuilder($responseData);
+        $formBuilder = $this->createFormBuilder($responseData, ['allow_extra_fields' => true]);
         $isLastPage = false;
 
         if ($idPage <= count($likertQuestions)) {
