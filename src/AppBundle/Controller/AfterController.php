@@ -20,9 +20,10 @@ class AfterController extends Controller
         $form = null;
         if ($respondentId = $this->get('session')->get('respondentId')) {
             $respondent = $this->getDoctrine()->getRepository(Respondent::class)->find($respondentId);
-            $form = $this->createForm(GetFeedbackType::class, $respondent);
+            $form = $this->createForm(GetFeedbackType::class, $respondent, ['attr' => ['source' => Respondent::SOURCE_AFTER]]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                $respondent->setFinished(true);
                 $this->get('session')->set('respondentId', null);
                 $em = $this->getDoctrine()->getManager();
                 foreach ($form['colleagues']->getData() as $colleague) {

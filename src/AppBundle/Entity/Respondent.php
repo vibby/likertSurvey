@@ -17,6 +17,7 @@ class Respondent
 {
     const SOURCE_ADMIN = 'admin';
     const SOURCE_HOME = 'home';
+    const SOURCE_AFTER = 'after';
 
     /**
      * @ORM\Column(type="integer")
