@@ -333,6 +333,7 @@ class SurveyController extends Controller
                 return new Response('ok');
             }
 
+            $this->get('session')->set('keys_ordered', null);
             if ($idPage > count($likertQuestions)) {
 
                 $time = time();
