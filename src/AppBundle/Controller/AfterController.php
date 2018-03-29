@@ -23,14 +23,17 @@ class AfterController extends Controller
             $form = $this->createForm(GetFeedbackType::class, $respondent, ['attr' => ['source' => Respondent::SOURCE_AFTER]]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $respondent->setFinished(true);
-                $this->get('session')->set('respondentId', null);
+                //$this->get('session')->set('respondentId', null);
                 $em = $this->getDoctrine()->getManager();
                 foreach ($form['colleagues']->getData() as $colleague) {
-                    $em->persist($colleague);
+                    if ($colleague) {
+                        $em->persist($colleague);
+                    }
                 }
                 foreach ($form['subordinates']->getData() as $subordinate) {
-                    $em->persist($subordinate);
+                    if ($subordinate) {
+                        $em->persist($subordinate);
+                    }
                 }
                 $em->persist($respondent);
                 $em->flush();

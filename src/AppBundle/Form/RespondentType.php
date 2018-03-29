@@ -31,13 +31,15 @@ class RespondentType extends AbstractType
                 FormEvents::POST_SUBMIT,
                 function(FormEvent $event) use ($options) {
                     $data = $event->getData();
-                    $data->setSource(
-                        isset($options['attr']['source'])
-                        ? $options['attr']['source']
-                        : 'unknown'
-                    );
-                    $data->setDomain($this->request->getBaseUrl());
-                    $event->setData($data);
+                    if ($data) {
+                        $data->setSource(
+                            isset($options['attr']['source'])
+                            ? $options['attr']['source']
+                            : 'unknown'
+                        );
+                        $data->setDomain($this->request->getBaseUrl());
+                        $event->setData($data);
+                    }
                 }
             )
         ;
