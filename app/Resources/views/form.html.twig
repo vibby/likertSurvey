@@ -80,18 +80,14 @@
             {% if form.vars.attr.class is defined and form.vars.attr.class == 'osgood' %}
                 {% for child in form %}
                     {% if loop.first %}
-                        {{ form_label(child) }}
+                        <label for="{{ child.vars.id }}" class="required">{{ form.vars.attr.labelFrom }}</label>
                     {% endif %}
                 {% endfor %}
             {% endif %}
             {% for child in form %}
                 <span class="choiceItem">
                     {{ form_widget(child) }}
-                    {% if form.vars.attr.class is defined and form.vars.attr.class == 'osgood' %}
-                        <label for="{{ child.vars.id }}" class="required">{{ loop.index0 }}</label>
-                    {% else %}
-                        {{ form_label(child) }}
-                    {% endif %}
+                    {{ form_label(child) }}
                 </span>
             {% else %}
                 <a class="next">→</a>
@@ -99,7 +95,7 @@
             {% if form.vars.attr.class is defined and form.vars.attr.class == 'osgood' %}
                 {% for child in form %}
                     {% if loop.last %}
-                        {{ form_label(child) }}
+                        <label for="{{ child.vars.id }}" class="required">{{ form.vars.attr.labelTo }}</label>
                     {% endif %}
                 {% endfor %}
             {% endif %}

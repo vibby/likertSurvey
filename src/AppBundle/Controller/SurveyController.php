@@ -137,6 +137,7 @@ class SurveyController extends Controller
 
             foreach($questions as $qKey => $likertQuestion) {
                 $choices = $this->getChoicesFromScale($likertQuestion);
+                $labels = $this->getLabelsFromScale($likertQuestion);
                 $formBuilder->add( 'page'.$idPage.'_item'.$qKey , Type\ChoiceType::class, array(
                     'choices' => $choices ? $choices : [],
                     'expanded' => true,
@@ -144,6 +145,8 @@ class SurveyController extends Controller
                     'constraints' => $choices ? new Assert\Choice(array_values($choices)) : null,
                     'attr' => array(
                         'class' => $likertQuestion['type'],
+                        'labelFrom' => $labels[0],
+                        'labelTo' => $labels[1],
                     ),
                     'label' => $likertQuestion['label'],
                 ));
@@ -325,9 +328,6 @@ class SurveyController extends Controller
             $formData = $form->getData();
             $data = array_merge($responseData, $formData);
             $respondent->setResponse($data);
-            $em = $this->getDoctrine()->getManagerForClass(Respondent::class);
-            $em->persist($respondent);
-            $em->flush();
 
             if ($request->isXmlHttpRequest()) {
                 return new Response('ok');
@@ -338,6 +338,7 @@ class SurveyController extends Controller
 
                 $time = time();
                 $respondent->setFinishDate(new \DateTime());
+                $respondent->setFinished(true);
 
                 $dataList = "";
                 foreach ($data as $key => &$value) {
@@ -371,6 +372,10 @@ class SurveyController extends Controller
                 $nextRoute = 'survey';
             }
 
+            $em = $this->getDoctrine()->getManagerForClass(Respondent::class);
+            $em->persist($respondent);
+            $em->flush();
+
             return $this->redirectToRoute($nextRoute);
         }
 
@@ -387,12 +392,13 @@ class SurveyController extends Controller
 
     private function getChoicesFromScale(array $likertQuestion)
     {
-        if (!isset($likertQuestion['scale']) || !$likertQuestion['scale']) {
+        if (!$scale = $this->getScale($likertQuestion)) {
             return [];
         }
 
-        $likertScales = $this->container->getParameter('likert_scales');
-        $scale = $likertScales[$likertQuestion['scale']];
+        if (isset($scale['scale'])) {
+            $scale = $scale['scale'];
+        }
         switch ($likertQuestion['type']) {
             case 'osgood':
             case 'likert':
@@ -402,19 +408,44 @@ class SurveyController extends Controller
         }
     }
 
+    private function getLabelsFromScale(array $likertQuestion)
+    {
+        if (($scale = $this->getScale($likertQuestion)) && isset($scale['labels'])) {
+            return $scale['labels'];
+        }
+
+        return [null, null];
+    }
+
+    private function getScale(array $likertQuestion)
+    {
+        if (!isset($likertQuestion['scale']) || !$likertQuestion['scale']) {
+            return null;
+        }
+
+        $likertScales = $this->container->getParameter('likert_scales');
+
+        return $likertScales[$likertQuestion['scale']];
+    }
+
     private function getRespondentFromSessionOrRedirect()
     {
         $currentRespondentKey = $this->get('session')->get('currentRespondentKey');
         if (!$currentRespondentKey) {
-            $this->addFlash('Error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
+            $this->addFlash('error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
 
             return $this->redirectToRoute('homepage');
         }
         $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $currentRespondentKey]);
         if (!$respondent) {
-            $this->addFlash('Error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
+            $this->addFlash('error', 'La session de votre clé d’activation n’est plus valide. Veuillez l’entrer à nouveau');
 
             return $this->redirectToRoute('homepage');
+        }
+        if ($respondent->isFinished()) {
+            $this->addFlash('success', 'Vous avez déjà complété l’enquête');
+
+            return $this->redirectToRoute('thanks');
         }
 
         return $respondent;
