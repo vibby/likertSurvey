@@ -61,10 +61,10 @@ class SurveyController extends Controller
 
         $likertScales = $this->container->getParameter('likert_scales');
         $likertQuestions = array_merge(
-            $this->container->getParameter('likert_questions_common'),
             $respondent->getIsManager()
                 ? $this->container->getParameter('likert_questions_manager')
-                : $this->container->getParameter('likert_questions_collab')
+                : $this->container->getParameter('likert_questions_collab'),
+            $this->container->getParameter('likert_questions_common')
         );
 
         if (!$respondent->getStartDate()) {
