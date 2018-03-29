@@ -135,7 +135,7 @@ parameters:
 ## Comp-hab-supervis
     page2:
       intro0:
-        label: ""Les énoncés de cette section portent sur votre expérience actuelle au travail. Pour chacun d’eux, cliquez sur le bouton qui reflète le mieux la fréquence à laquelle votre supérieur immédiat fait les comportements suivants. Par supérieur immédiat, nous entendons la personne à laquelle vous devez vous rapporter et/ou qui dirige votre travail.""
+        label: "Les énoncés de cette section portent sur votre expérience actuelle au travail. Pour chacun d’eux, cliquez sur le bouton qui reflète le mieux la fréquence à laquelle votre supérieur immédiat fait les comportements suivants. Par supérieur immédiat, nous entendons la personne à laquelle vous devez vous rapporter et/ou qui dirige votre travail."
         type: separator
 
       q37:
