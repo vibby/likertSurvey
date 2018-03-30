@@ -241,6 +241,9 @@ class SurveyController extends Controller
                 ->add( 'age', Type\IntegerType::class, array(
                     'label' => "Votre age",
                     'required' => true,
+                    'attr' => [
+                        'min' => 18,
+                    ],
                 ))
                 ->add('Duree_societe', YearsMonthsType::class, array(
                     'label' => "Depuis combien de temps travaillez-vous dans votre entreprise actuelle ?",
@@ -302,10 +305,16 @@ class SurveyController extends Controller
                 ->add( 'Heures_travail_semaine', Type\IntegerType::class, array(
                     'label' => "Indiquez votre nombre moyen d’heures travaillées par semaine",
                     'required' => true,
+                    'attr' => [
+                        'min' => 1,
+                    ],
                 ))
                 ->add( 'Taille_equipe', Type\IntegerType::class, array(
                     'label' => "Indiquez la taille de votre équipe de travail",
                     'required' => true,
+                    'attr' => [
+                        'min' => 1,
+                    ],
                 ))
                 ->add( 'Teletravail', Type\ChoiceType::class, array(
                     'placeholder' => '-sélectionner-',
@@ -319,6 +328,9 @@ class SurveyController extends Controller
                 ->add( 'Nb_bureau', Type\IntegerType::class, array(
                     'label' => "Avec combien de personnes partagez-vous votre bureau ?",
                     'required' => true,
+                    'attr' => [
+                        'min' => 0,
+                    ],
                 ))
             ;
         }
