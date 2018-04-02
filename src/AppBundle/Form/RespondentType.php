@@ -37,7 +37,7 @@ class RespondentType extends AbstractType
                             ? $options['attr']['source']
                             : 'unknown'
                         );
-                        $data->setDomain($this->request->getBaseUrl());
+                        $data->setDomain($this->request->server->get('SERVER_NAME'));
                         $event->setData($data);
                     }
                 }
