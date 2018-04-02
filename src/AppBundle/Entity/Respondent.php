@@ -114,7 +114,7 @@ class Respondent
     private $subordinates;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Respondent", inversedBy="subordinates")
+     * @ORM\ManyToOne(targetEntity="Respondent", inversedBy="subordinates", cascade={"persist"})
      * @ORM\JoinColumn(name="manager_id", referencedColumnName="id")
      */
     private $manager;
@@ -291,9 +291,12 @@ class Respondent
 
     public function addSubordinate(Respondent $respondent)
     {
-        if (!$this->subordinates->contains($respondent)) {
-            $respondent->setManager($this);
+        if ($respondent->getManager()) {
+            return;
+        }
+        if (!$this->hasSubordinate($respondent)) {
             $this->subordinates->add($respondent);
+            $respondent->setManager($this);
         }
     }
 
@@ -305,6 +308,16 @@ class Respondent
         }
     }
 
+    public function hasSubordinate($respondent)
+    {
+        $emails = [];
+        foreach ($this->subordinates as $subordinate) {
+            $emails[] = $subordinate->getEmail();
+        }
+
+        return in_array($respondent->getEmail(), $emails);
+    }
+
     public function getSubordinates()
     {
         return $this->subordinates;
@@ -312,12 +325,12 @@ class Respondent
 
     public function setManager(Respondent $manager)
     {
-        if ($this->manager) {
-            throw new \Exception('Cette personne est déjà définie.');
+        if (!$this->manager) {
+            $this->manager = $manager;
+            if (!$manager->hasSubordinate($this)) {
+                $manager->addSubordinate($this);
+            }
         }
-
-        $manager->addSubordinate($this);
-        $this->manager = $manager;
     }
 
     public function getManager()
@@ -327,9 +340,6 @@ class Respondent
 
     public function getIsManager()
     {
-        if (count($this->getSubordinates())) {
-            return true;
-        }
         return $this->isManager;
     }
 
