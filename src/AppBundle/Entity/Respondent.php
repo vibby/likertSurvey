@@ -109,7 +109,7 @@ class Respondent
     private $domain;
 
     /**
-     * @ORM\OneToMany(targetEntity="Respondent", mappedBy="manager")
+     * @ORM\OneToMany(targetEntity="Respondent", mappedBy="manager",cascade={"persist"})
      */
     private $subordinates;
 
@@ -303,8 +303,8 @@ class Respondent
     public function removeSubordinate(Respondent $respondent)
     {
         if ($this->subordinates->contains($respondent)) {
-            $respondent->setManager(null);
-            $this->subordinates->remove($respondent);
+            $respondent->unsetManager();
+            $this->subordinates->removeElement($respondent);
         }
     }
 
@@ -321,6 +321,11 @@ class Respondent
     public function getSubordinates()
     {
         return $this->subordinates;
+    }
+
+    public function unsetManager()
+    {
+        $this->manager = null;
     }
 
     public function setManager(Respondent $manager)
