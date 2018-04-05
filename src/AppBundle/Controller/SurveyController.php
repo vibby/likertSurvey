@@ -322,7 +322,7 @@ class SurveyController extends Controller
                     'expanded' => false,
                     'multiple' => false,
                     'constraints' => new Assert\Choice(array_keys($telework)),
-                    'label' => "Votre entreprise propose-t-elle la possibilité de travailler à distance (télétravail) ? Si oui : En moyenne, à quelle fréquence travaillez-vous à distance ?",
+                    'label' => "Travaillez-vous à distance, et si oui, à quelle fréquence moyenne ?",
                     'required' => true,
                 ))
                 ->add( 'Nb_bureau', Type\IntegerType::class, array(
