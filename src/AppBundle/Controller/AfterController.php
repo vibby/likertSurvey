@@ -19,7 +19,9 @@ class AfterController extends Controller
     {
         $form = null;
         if ($respondentId = $this->get('session')->get('respondentId')) {
-            $respondent = $this->getDoctrine()->getRepository(Respondent::class)->find($respondentId);
+            $repository = $this->getDoctrine()->getRepository(Respondent::class);
+            $respondent = $repository->find($respondentId);
+            $manager = $respondent->getManager();
             $form = $this->createForm(GetFeedbackType::class, $respondent, ['attr' => ['source' => Respondent::SOURCE_AFTER]]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -27,12 +29,24 @@ class AfterController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 foreach ($form['colleagues']->getData() as $colleague) {
                     if ($colleague) {
-                        $em->persist($colleague);
+                        $existing = $repository->findOneBy(['key' => $colleague->getKey()]);
+                        if (!$existing) {
+                            $em->persist($colleague);
+                        }
                     }
                 }
                 foreach ($form['subordinates']->getData() as $subordinate) {
-                    if ($subordinate) {
-                        $em->persist($subordinate);
+                    if ($subordinate && $subordinate->getEmail()) {
+                        $existing = $repository->findOneBy(['key' => $subordinate->getKey()]);
+                        if (!$existing) {
+                            $respondent->addSubordinate($subordinate);
+                        }
+                    }
+                }
+                if (!$manager && $respondent->getManager()) {
+                    if ($existing = $repository->findOneBy(['key' => $respondent->getManager()->getKey()])) {
+                        $respondent->unsetManager();
+                        $respondent->setManager($existing);
                     }
                 }
                 $em->persist($respondent);

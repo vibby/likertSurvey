@@ -18,6 +18,9 @@ class Respondent
     const SOURCE_ADMIN = 'admin';
     const SOURCE_HOME = 'home';
     const SOURCE_AFTER = 'after';
+    const SOURCE_AFTER_MANAGER = 'addManager';
+    const SOURCE_AFTER_SUBORD = 'addSubord';
+    const SOURCE_AFTER_COLLEAGUE = 'addColleag';
 
     /**
      * @ORM\Column(type="integer")
@@ -32,8 +35,9 @@ class Respondent
     private $key;
 
     /**
-     * @ORM\Column(type="string", length=200, unique=true)
+     * @ORM\Column(type="string", length=200, unique=true, nullable=false)
      * @Assert\Email()
+     * @Assert\NotBlank()
      */
     private $email;
 

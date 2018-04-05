@@ -5,7 +5,6 @@ namespace AppBundle\Form;
 use AppBundle\Entity\Respondent;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -26,19 +25,19 @@ class RespondentType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('source', HiddenType::class)
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
                 function(FormEvent $event) use ($options) {
-                    $data = $event->getData();
-                    if ($data) {
-                        $data->setSource(
+                    /** @var Respondent $data */
+                    $respondent = $event->getData();
+                    if ($respondent && $respondent->getEmail()) {
+                        $respondent->setSource(
                             isset($options['attr']['source'])
                             ? $options['attr']['source']
                             : 'unknown'
                         );
-                        $data->setDomain($this->request->server->get('SERVER_NAME'));
-                        $event->setData($data);
+                        $respondent->setDomain($this->request->server->get('SERVER_NAME'));
+                        $event->setData($respondent);
                     }
                 }
             )

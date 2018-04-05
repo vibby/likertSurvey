@@ -48,13 +48,14 @@ class GetFeedbackType extends AbstractType
                     'entry_type' => RespondentType::class,
                     'entry_options' => [
                         'attr' => [
-                            'source' => 'addSubord',
+                            'source' => Respondent::SOURCE_AFTER_SUBORD,
                         ]
                     ],
                     'required'  => false,
                     'label' => 'Mes collaborateurs',
                     'allow_add' => true,
                     'by_reference' => false,
+                    'mapped' => false,
                 )
             )
             ->add(
@@ -64,7 +65,7 @@ class GetFeedbackType extends AbstractType
                     'required'  => false,
                     'label' => 'Mon manager',
                     'attr' => [
-                        'source' => 'addManager'
+                        'source' => Respondent::SOURCE_AFTER_MANAGER
                     ]
                 )
             )
@@ -75,7 +76,7 @@ class GetFeedbackType extends AbstractType
                     'entry_type' => RespondentType::class,
                     'entry_options' => [
                         'attr' => [
-                            'source' => 'addColleag',
+                            'source' => Respondent::SOURCE_AFTER_COLLEAGUE,
                         ]
                     ],
                     'required'  => false,
