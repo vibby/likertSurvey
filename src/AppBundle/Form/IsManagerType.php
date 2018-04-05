@@ -22,7 +22,7 @@ class IsManagerType extends AbstractType
                         'Oui' => true,
                         'Non' => false,
                     ],
-                    'label'=>'Avez-vous des fonctions d’encadrement / de management ?',
+                    'label'=>'Avez-vous actuellement des fonctions managériales opérationnelles ou fonctionnelles ?',
                     'expanded' => true,
                 ]
             )
