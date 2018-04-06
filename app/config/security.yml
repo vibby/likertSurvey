@@ -13,6 +13,9 @@ security:
                     vibby:
                         password: $2y$13$afGP5AVni9SueyHhHZmqM.iz4UUU1V.DQfXBQzBvA1XEs/GYxrWrC
                         roles: 'ROLE_ADMIN'
+                    lucie:
+                        password: $2y$10$2keYUubXbSq1Nr2WOcFWyOwVzbhHTkq8T9778Q1272LpPHgSIHbie
+                        roles: 'ROLE_ADMIN'
 
     encoders:
         Symfony\Component\Security\Core\User\User: bcrypt
