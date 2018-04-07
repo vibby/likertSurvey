@@ -12,7 +12,7 @@ class KeyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('key', TextType::class, ['label'=>'Clé d’activation'])
+            ->add('key', TextType::class, ['label'=>'Mon code personnel et confidentiel :'])
             ->add('ok', SubmitType::class)
         ;
     }

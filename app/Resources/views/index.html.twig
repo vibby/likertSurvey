@@ -10,26 +10,33 @@
             <p>Vous avez déjà commencé à compléter le questionnaire. Vous pouvez reprendre à la dernière étape validée.</p>
             <hr />
         {% else %}
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis nulla at felis gravida iaculis. Vestibulum ultricies turpis eget sem consectetur, vel molestie lacus pretium.</p>
-            <p>Praesent non est ut ipsum scelerisque ullamcorper. Nulla nec tortor semper, consequat enim eget, mattis tortor. Cras a leo nec mauris viverra vulputate. Vivamus rutrum commodo massa nec lobortis. Duis egestas, mi sed molestie ullamcorper, tellus tortor dapibus nisl, at tristique magna turpis in velit. Fusce mauris risus, malesuada in nulla in, vestibulum sagittis erat. Fusce ac auctor ex, nec ornare diam. Aenean nec gravida arcu. Vestibulum malesuada, turpis non iaculis placerat, odio justo rhoncus lacus, ut imperdiet nisi eros ut nisi.</p>
+            <p>Bienvenue sur TEEP® Research, le site dédié à un projet de recherche initié par la société FdF et le Laboratoire de Psychologie des Pays de la Loire. L’enquête à laquelle vous êtes sur le point de participer est consacrée à l’environnement professionnel des managers et à leurs pratiques. Que vous soyez chef d’entreprise ou salarié, manager ou non, votre participation est importante à nos yeux !</p>
+            <p>Votre spontanéité est la meilleure garantie de résultats fiables pour ce projet. <strong>Il n’y a pas de bonnes ou mauvaises réponses</strong>, indiquez simplement celles qui viennent en premier à votre esprit.</p>
+            <p>Pour participer, vous devrez indiquer votre code personnel et confidentiel. Ce code garantit la confidentialité et l’anonymat de vos résultats. Grâce à lui, vous pouvez répondre en plusieurs fois si nécessaire, en sauvegardant les réponses que vous avez déjà données.</p>
         {% endif %}
-
-        <p>Pour toute question, vous pouvez nous contacter à cette adresse courriel :<br />
-        <span style="font-size:.8em">Les emails sont volontairement dissimulés, supprimez les [ et ] pour les utiliser</span></p>
-        <ul>
-            <li>Kristina Beauvivre : kristina.beauvivre[@]fdf.fr</li>
-        </ul>
-        <br />
 
         {% if not dataFound %}
             {{ form(keyForm) }}
-            <p>Pas encore de clé d’activation ? Vous l’avez perdu ? Recevez la par courriel en indiquant votre adresse ci-dessous</p>
+            <p>Vous n’avez pas reçu votre code personnel et confidentiel ? Vous l’avez perdu ? Indiquez votre adresse ci-dessous :</p>
             {{ form_start(registerForm) }}
                 {{ form_row(registerForm.email) }}
                 <input type="submit" value="Ok" />
             {{ form_end(registerForm) }}
         {% endif %}
-        <p>Nous vous remercions par avance de votre collaboration.</p>
+
+        <p>Pour toute question, vous pouvez nous contacter à ces adresses email :<br />
+            <span style="font-size:.8em">Les emails sont volontairement dissimulés, supprimez les [ et ] pour les utiliser</span></p>
+        <ul>
+            <li>Kristina Beauvivre, chercheure référente du projet – kbeauvivre [ @ ] franz-dorner.com</li>
+            <li>Lucie Prunes, étudiante Master 1 Psychologie – lucie.prunes [ @ ] etu.univ-nantes.fr</li>
+            <li>Pr Ghozlane Fleury-Bahi, directrice du Laboratoire de Psychologie des Pays de la Loire – ghozlane.fleury [ @ ] univ-nantes.fr</li>
+            <li>Patrick Bemmert, président de la société FdF – pbemmert [ @ ] franz-dorner.com</li>
+        </ul>
+        <br />
+
+        <p>Nous sommes heureux de vous accueillir sur ce site et vous remercions d’avance pour votre participation.</p>
+
+        <pCe site est adapté pour une utilisation sur ordinateur ou sur tablette/smartphone.</p>
 
     </div>
 {% endblock %}

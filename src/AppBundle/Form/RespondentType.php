@@ -24,7 +24,7 @@ class RespondentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', EmailType::class)
+            ->add('email', EmailType::class, ['label' => 'Email :'])
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
                 function(FormEvent $event) use ($options) {
