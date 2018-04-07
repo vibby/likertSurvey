@@ -293,7 +293,11 @@ class SurveyController extends Controller
                     'label' => "Indiquez le secteur d’activité de votre entreprise actuelle",
                     'required' => true,
                 ))
-                ->add( 'Secteur', Type\ChoiceType::class, array(
+                ->add( 'Entreprise', Type\TextType::class, array(
+                    'label' => "Nom de votre entreprise",
+                    'required' => true,
+                ))
+                ->add( 'Taille', Type\ChoiceType::class, array(
                     'placeholder' => '-sélectionner-',
                     'choices' => array_flip($sizes) ,
                     'expanded' => false,
