@@ -21,15 +21,7 @@ class GetFeedbackType extends AbstractType
                 'email_feedback',
                 EmailType::class,
                 [
-                    'label' => 'Votre email',
-                    'required' => false,
-                ]
-            )
-            ->add(
-                'feedback_myself',
-                CheckboxType::class,
-                [
-                    'label' => 'Inclure des comparaisons entre mes résultats et les moyennes',
+                    'label' => 'Mon adresse email :',
                     'required' => false,
                 ]
             )
@@ -37,7 +29,7 @@ class GetFeedbackType extends AbstractType
                 'feedback_team',
                 CheckboxType::class,
                 [
-                    'label' => 'Inclure une synthèse de mon équipe',
+                    'label' => 'Je souhaite recevoir le bilan consolidé des résultats de mon équipe. (Merci de vous assurer que votre adresse email est bien renseignée en haut de ce formulaire)',
                     'required' => false,
                 ]
             )
@@ -52,7 +44,7 @@ class GetFeedbackType extends AbstractType
                         ]
                     ],
                     'required'  => false,
-                    'label' => 'Mes collaborateurs',
+                    'label' => 'Je partage avec mes collaborateurs',
                     'allow_add' => true,
                     'by_reference' => false,
                     'mapped' => false,
@@ -63,7 +55,7 @@ class GetFeedbackType extends AbstractType
                 RespondentType::class,
                 array(
                     'required'  => false,
-                    'label' => 'Mon manager',
+                    'label' => 'Je partage avec mon manager',
                     'attr' => [
                         'source' => Respondent::SOURCE_AFTER_MANAGER
                     ]
@@ -80,7 +72,7 @@ class GetFeedbackType extends AbstractType
                         ]
                     ],
                     'required'  => false,
-                    'label' => 'Mes collègues',
+                    'label' => 'Je partage avec mes collègues ou autres relations hors de ma société :',
                     'allow_add' => true,
                     'by_reference' => false,
                     'mapped' => false,

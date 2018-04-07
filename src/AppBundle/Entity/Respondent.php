@@ -83,11 +83,6 @@ class Respondent
     private $lastConnectionDate;
 
     /**
-     * @ORM\Column(name="feedback_myself", type="boolean", nullable=true)
-     */
-    private $feedbackMyself;
-
-    /**
      * @ORM\Column(name="feedback_team", type="boolean", nullable=true)
      */
     private $feedbackTeam;
@@ -271,16 +266,6 @@ class Respondent
     public function getDomain()
     {
         return $this->domain;
-    }
-
-    public function setFeedbackMyself($feedbackMyself)
-    {
-        $this->feedbackMyself = $feedbackMyself;
-    }
-
-    public function isFeedbackMyself()
-    {
-        return $this->feedbackMyself;
     }
 
     public function setFeedbackTeam($feedbackTeam)

@@ -49,6 +49,10 @@ body.admin header {
     }
 }
 
+h1 {
+    text-align: center;
+}
+
 .main {
     position: relative;
     width: 101%;

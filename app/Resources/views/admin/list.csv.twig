@@ -1,10 +1,9 @@
-Email,Key,URL,Email feedback,feedbackMyself,feedbackTeam,Inséré le,Nb collab,collab
+Email,Key,URL,Email feedback,feedbackTeam,Inséré le,Nb collab,collab
 {% for respondent in respondents %}
     {{- respondent.email -}},
     {{- respondent.key -}},
     {{- absolute_url(path('homepage', {'key': respondent.key})) -}},
     {{- respondent.emailFeedback -}},
-    {{- respondent.feedbackMyself -}},
     {{- respondent.feedbackTeam -}},
     {{- respondent.createdDate|date('Y-m-d') -}},
     {{- respondent.subordinates|length -}},

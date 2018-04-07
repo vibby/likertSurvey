@@ -10,21 +10,60 @@
 {% block content %}
     <h1>Merci !</h1>
     <div class="item">
-        <p>Votre participation à l’enquête a pu être complétement prise en compte. Nous vous remercions de cette participation !<p>
+        <p>Votre participation à l’enquête a pu être finalisée et nous vous en remercions !<p>
 
         {% if form %}
-            <p>Si vous êtes interessé par les résultats de cette étude, merci de compléter votre courriel ci-dessous pour recevoir gratuitement une présentation générale des résultats. Cet email sera utilisé uniquement à cette fin.<p>
+            <p>Vous êtes curieux(se) de connaître les résultats globaux de cette enquête ? Rien de plus simple : indiquez l’adresse email à laquelle vous souhaitez que nous vous transmettions les résultats. L’adresse indiquée sera utilisée uniquement dans ce but.<p>
             {{ form_start(form) }}
                 {{ form_row(form.email_feedback) }}
-                {{ form_row(form.feedback_myself) }}
-                {{ form_row(form.feedback_team) }}
-                <p>Afin d’obtenir une synthèse de vos collaborateurs de manière anonyme, au moins 5 d’entre eux doivent compléter ce questionnaire. Merci de nous transmettre les adresses de courriel de vos collaborateurs. Ils recevront un code d’activation anonymisé pour compléter le questionnaire</p>
+                <p>Et maintenant ? <strong>Partagez</strong> avec les autres l’existence de cette enquête et contribuez ainsi à la réussite de ce projet unique !
+                    Pour cela, indiquez leurs adresses email ci-dessous, nous leur enverrons une invitation sans faire référence à votre adresse email.
+                    <a href="javascript:;" onclick="
+                        if (document.getElementById('emailExample').style.display == 'block') {
+                            document.getElementById('emailExample').style.display = 'none';
+                        } else {
+                            document.getElementById('emailExample').style.display = 'block';
+                        }
+                    ">Voici le texte</a>
+                </p>
+                <p style="display: none; padding: .5em; background-color: #CCC" id="emailExample">
+                    Bonjour,<br />
+                    Une personne de votre entourage a participé à l’enquête TEEP® Research 2018 et souhaite vous inviter à y répondre à votre tour.<br />
+
+                    Il s’agit d’un projet de recherche s’intéressant à l’environnement des managers et à leurs pratiques. Ce projet est initié par la société FdF en collaboration avec le Laboratoire de Psychologie des Pays de la Loire. Que vous soyez chef d’entreprise ou salarié, manager ou non, cette enquête vous concerne et nous serions heureux de vous compter parmi nos participants.<br />
+
+                    Pour cela, rien de plus simple : cliquez sur le lien ci-dessous qui vous permettra d’accéder anonymement à l’enquête de manière personnelle et confidentielle.<br />
+
+                    Lien avec code confidentiel et personnel<br />
+
+                    A très bientôt !<br /><br />
+
+                    Kristina Beauvivre<br />
+                    Chercheure référente du projet TEEP Research 2018<br /><br />
+
+                    <a href="#emailExample" onclick="
+                        document.getElementById('emailExample').style.display = 'none';
+                    ">Fermer</a>
+                </p>
+                <p>
+                    Nous sommes soucieux de préserver l’anonymat et la confidentialité des réponses de nos participants – aucune information personnelle ne peut être communiquée concernant les participants à ce projet.
+                </p>
+                {{ form_row(form.manager) }}
+                <br />
+
                 {{ form_label(form.subordinates) }}
                 <ul class="subordinates"
                     data-prototype="{{ form_widget(form.subordinates.vars.prototype)|e('html_attr') }}"
                 >
                 </ul>
-                {{ form_row(form.manager) }}
+                <p>
+                    Si au moins 5 de vos collaborateurs (indiqués ci-dessus) répondent à l’enquête, nous pouvons vous envoyer un bilan <strong>consolidé</strong> et <strong>anonyme</strong>.
+                    Coche : je souhaite recevoir le bilan consolidé des résultats de mon équipe. (Merci de vous assurer que votre adresse email est bien renseignée en haut de ce formulaire)
+                </p>
+                {{ form_widget(form.feedback_team) }}
+                {{ form_label(form.feedback_team) }}
+                <br /><br />
+
                 {{ form_label(form.colleagues) }}
                 <ul class="colleagues"
                     data-prototype="{{ form_widget(form.colleagues.vars.prototype)|e('html_attr') }}"
@@ -33,14 +72,7 @@
                 {{ form_widget(form._token) }}
                 <input type="submit" value="Valider" />
             {{ form_end(form, {'render_rest': false}) }}
+            <br />
         {% endif %}
-
-        <p>Pour toute question, vous pouvez nous contacter à cette adresse de courriel :<br />
-        <span style="font-size:.8em">Les emails sont volontairement dissimulés, supprimez les [ et ] pour les utiliser</span></p>
-        <ul>
-            <li>Kristina Beauvivre : kristina.beauvivre[@]fdf.fr</li>
-        </ul>
-
     </div>
 {% endblock %}
-
