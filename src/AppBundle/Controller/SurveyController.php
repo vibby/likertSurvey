@@ -218,7 +218,6 @@ class SurveyController extends Controller
             );
             $telework = array(
                 0 => 'Non',
-                1 => 'Oui, mais je n’en fais pas',
                 2 => 'Oui, 1 à 3 jours / mois',
                 3 => 'Oui, 1 jour / semaine',
                 4 => 'Oui, 2 jours / semaine',
