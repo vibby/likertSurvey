@@ -31,8 +31,8 @@
 
 <body class="{% block bodyClass %}{% endblock %}">
     <header class="line mod">
-        <img alt="FdF" src="https://fdf-performance-entreprise.com/wp-content/uploads/2014/07/logoFdF.png" />
-        <img alt="Université de Nantes" src="https://www.univ-nantes.fr/uas/institutionnel/LOGO/logo%20un2012blanc_larg40.png" />
+        <img alt="FdF" src="{{ asset('bundles/app/images/logoFdF.png') }}" />
+        <img alt="Université de Nantes" src="{{ asset('bundles/app/images/univ-nantes.png') }}" />
     </header>
     <div class="content">
         {% for label, messages in app.flashes %}
