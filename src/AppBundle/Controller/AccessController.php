@@ -78,6 +78,26 @@ class AccessController extends Controller
             $respondent->setDomain($request->getHost());
             $em->persist($respondent);
             $em->flush();
+
+            if ($request->getHost() == 'teeprecherche2018.teep.fr') {
+                $emailDest = 'lucie.prunes@etu.univ-nantes.fr';
+            } else {
+                $emailDest = 'kristina@beauvivre.fr';
+            }
+            /** @var \Swift_Mailer $mailer */
+            $mailer = $this->get(\Swift_Mailer::class);
+            /** @var \Swift_Message $message */
+            $message = $mailer->createMessage();
+            $message->setSubject('Demande teep research');
+            $message->setTo($emailDest);
+            $message->setBody(
+                sprintf(
+                    'Une nouvelle personne a fait une demande pour répondre au formulaire teep research. Son email : %s',
+                    $respondent->getEmail()
+                )
+            );
+            $mailer->send($message);
+
             $this->addFlash('success', 'La clé d’activation vous sera prochainement transmise par courriel');
 
             return $this->redirectToRoute('homepage');
