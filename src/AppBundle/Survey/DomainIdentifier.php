@@ -6,24 +6,28 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class DomainIdentifier
 {
-    private $requestStack;
+    private $request;
 
     public function __construct(RequestStack $requestStack)
     {
-        $this->requestStack = $requestStack;
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     public function getIdentifier()
     {
-        $request = $this->requestStack->getCurrentRequest();
 
         return sprintf(
             '%s/%s',
-            $request->getHost(),
-            explode(
-                '/',
-                trim($request->getRequestUri(), '/')
-            )[0]
+            $this->request->getHost(),
+            $this->getFolder()
         );
+    }
+
+    public function getFolder()
+    {
+        return  explode(
+            '/',
+            trim($this->request->getRequestUri(), '/')
+        )[0];
     }
 }

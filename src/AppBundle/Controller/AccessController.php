@@ -9,13 +9,19 @@ use AppBundle\Survey\DomainIdentifier;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class AccessController extends Controller
 {
+    private $swiftMailer;
+    private $domainIdentifier;
+
+    public function __construct(\Swift_Mailer $swiftMailer, DomainIdentifier $domainIdentifier)
+    {
+        $this->swiftMailer = $swiftMailer;
+        $this->domainIdentifier = $domainIdentifier;
+    }
+
     /**
      * @Route(
      *     "/{key}",
@@ -76,19 +82,17 @@ class AccessController extends Controller
         $registerForm->handleRequest($request);
         if ($registerForm->isSubmitted() && $registerForm->isValid()) {
             $respondent->setSource(Respondent::SOURCE_HOME);
-            $respondent->setDomain($this->get(DomainIdentifier::class)->getIdentifier());
+            $respondent->setDomain($this->domainIdentifier->getIdentifier());
             $em->persist($respondent);
             $em->flush();
 
-            if ($request->getHost() == 'teeprecherche2018.teep.fr') {
+            if ($this->domainIdentifier->getFolder() == 'teeprecherche2018') {
                 $emailDest = 'lucie.prunes@etu.univ-nantes.fr';
             } else {
                 $emailDest = 'kristina@beauvivre.fr';
             }
-            /** @var \Swift_Mailer $mailer */
-            $mailer = $this->get(\Swift_Mailer::class);
             /** @var \Swift_Message $message */
-            $message = $mailer->createMessage();
+            $message = $this->swiftMailer->createMessage();
             $message->setSubject('Demande teep research');
             $message->setTo($emailDest);
             $message->setBody(
@@ -97,7 +101,7 @@ class AccessController extends Controller
                     $respondent->getEmail()
                 )
             );
-            $mailer->send($message);
+            $this->swiftMailer->send($message);
 
             $this->addFlash('success', 'La clé d’activation vous sera prochainement transmise par courriel');
 
