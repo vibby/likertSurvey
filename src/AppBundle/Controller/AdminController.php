@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Respondent;
 use AppBundle\Form\ManyRespondentType;
+use AppBundle\Survey\DomainIdentifier;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -34,7 +35,7 @@ class AdminController extends Controller
                 $respondent = new Respondent();
                 $respondent->setEmail($email);
                 $respondent->setSource(Respondent::SOURCE_ADMIN);
-                $respondent->setDomain($request->getHost());
+                $respondent->setDomain($this->get(DomainIdentifier::class)->getIdentifier());
                 $em->persist($respondent);
                 $respondents[] = $respondent;
             }
@@ -70,7 +71,7 @@ class AdminController extends Controller
      *     }
      * )
      */
-    public function listAction($_format, $filter, $page)
+    public function listAction(Request $request, $_format, $filter, $page)
     {
         $repo = $this->get('doctrine.orm.entity_manager')->getRepository(Respondent::class);
         switch ($filter) {

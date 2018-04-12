@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Respondent;
 use AppBundle\Form\KeyType;
 use AppBundle\Form\RespondentType;
+use AppBundle\Survey\DomainIdentifier;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
@@ -75,7 +76,7 @@ class AccessController extends Controller
         $registerForm->handleRequest($request);
         if ($registerForm->isSubmitted() && $registerForm->isValid()) {
             $respondent->setSource(Respondent::SOURCE_HOME);
-            $respondent->setDomain($request->getHost());
+            $respondent->setDomain($this->get(DomainIdentifier::class)->getIdentifier());
             $em->persist($respondent);
             $em->flush();
 

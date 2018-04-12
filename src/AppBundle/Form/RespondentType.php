@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Respondent;
+use AppBundle\Survey\DomainIdentifier;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,10 +16,12 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 class RespondentType extends AbstractType
 {
     private $request;
+    private $domainIdentifier;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, DomainIdentifier $domainIdentifier)
     {
         $this->request = $requestStack->getCurrentRequest();
+        $this->domainIdentifier = $domainIdentifier;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -36,7 +39,7 @@ class RespondentType extends AbstractType
                             ? $options['attr']['source']
                             : 'unknown'
                         );
-                        $respondent->setDomain($this->request->server->get('SERVER_NAME'));
+                        $respondent->setDomain($this->domainIdentifier->getIdentifier());
                         $event->setData($respondent);
                     }
                 }
