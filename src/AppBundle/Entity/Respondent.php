@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Tools\Fingerprinter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -11,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="likertsurvey_respondent")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RespondentRepository")
  * @UniqueEntity(fields={"email"}, message="This email is already used.")
- * @UniqueEntity(fields={"key"}, message="The generated key is already used.")
+ * @UniqueEntity(fields={"key"}, message="La clé générée est déjà utilisée")
  */
 class Respondent
 {
@@ -143,8 +144,7 @@ class Respondent
     public function setEmail($email)
     {
         $this->email = $email;
-        $salt = 'lræi\'—dfKC]ocIW}±ð©0…R!|R?è†UoRhLnm2,)Rlt/X®f!r~…×≠)iE3|';
-        $this->key = substr(crypt($email, $salt), 0, 8);
+        $this->key = Fingerprinter::fingerprint('k3y$'.$email);
     }
 
     public function getEmailFeedback()

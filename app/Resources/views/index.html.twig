@@ -21,6 +21,7 @@
             {{ form(keyForm) }}
             <p>Vous n’avez pas reçu votre code personnel et confidentiel ? Vous l’avez perdu ? Indiquez votre adresse ci-dessous :</p>
             {{ form_start(registerForm) }}
+                {{ form_errors(registerForm) }}
                 {{ form_row(registerForm.email) }}
                 <input type="submit" value="Ok" />
             {{ form_end(registerForm) }}
