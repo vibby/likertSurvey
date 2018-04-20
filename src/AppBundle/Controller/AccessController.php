@@ -30,7 +30,7 @@ class AccessController extends Controller
      *         "key": "",
      *     },
      *     requirements={
-     *         "key": ".{8}"
+     *         "key": ".{6,8}"
      *     }
      * )
      */

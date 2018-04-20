@@ -1,3 +1,15 @@
-app:
-    resource: '@AppBundle/Controller/'
+Admin:
+    resource: '@AppBundle/Controller/AdminController.php'
+    type: annotation
+After:
+    resource: '@AppBundle/Controller/AfterController.php'
+    type: annotation
+Security:
+    resource: '@AppBundle/Controller/SecurityController.php'
+    type: annotation
+Survey:
+    resource: '@AppBundle/Controller/SurveyController.php'
+    type: annotation
+Access:
+    resource: '@AppBundle/Controller/AccessController.php'
     type: annotation
