@@ -112,9 +112,39 @@ class AdminController extends Controller
                 ]
             );
         } else {
+            $likertQuestions = array_merge(
+                $this->container->getParameter('likert_questions_manager'),
+                $this->container->getParameter('likert_questions_collab'),
+                $this->container->getParameter('likert_questions_common')
+            );
+            $allQuestionKey = [];
+            foreach ($likertQuestions as $page => $likertQuestion) {
+                foreach ($likertQuestion as $qKey => $qData) {
+                    $allQuestionKey[] = $page . '_item' . $qKey;
+                }
+            }
+            sort($allQuestionKey);
+            $socioDemo = [
+                'Sexe',
+                'age',
+                'Salaire',
+                'Niveau_etude',
+                'Profession',
+                'Secteur',
+                'Taille',
+                'Heures_travail_semaine',
+                'Taille_equipe',
+                'Teletravail',
+                'Nb_bureau',
+            ];
+            $allQuestionKey = array_merge($allQuestionKey, $socioDemo);
+
             $response = new Response($this->get('twig')->render(
                 'admin/list.csv.twig',
-                array('respondents' => $query->getResult())
+                array(
+                    'respondents' => $query->getResult(),
+                    'questionKeys' => $allQuestionKey,
+                )
             ));
 
             $disposition = $response->headers->makeDisposition(
