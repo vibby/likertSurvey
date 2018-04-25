@@ -76,21 +76,25 @@ class SurveyController extends Controller
             $responseData = [];
         }
 
-        $idPage = 0;
-        $found = false;
-        do {
-            $idPage++;
-            if (!array_key_exists('page' . $idPage, $likertQuestions)) {
-                $found = true;
-            } else {
-                foreach ($likertQuestions['page'. $idPage] as $qKey => $likertQuestion) {
-                    $responseKey = 'page' . $idPage . '_item' . $qKey;
-                    if (!array_key_exists($responseKey, $responseData) || ($responseData[$responseKey] === null && $likertQuestion['type'] !== 'separator')) {
-                        $found = true;
+        if ($request->getMethod() == 'POST' && $request->request->get('form')['pageNumber']) {
+            $idPage = $request->request->get('form')['pageNumber'];
+        } else {
+            $idPage = 0;
+            $found = false;
+            do {
+                $idPage++;
+                if (!array_key_exists('page' . $idPage, $likertQuestions)) {
+                    $found = true;
+                } else {
+                    foreach ($likertQuestions['page'. $idPage] as $qKey => $likertQuestion) {
+                        $responseKey = 'page' . $idPage . '_item' . $qKey;
+                        if (!array_key_exists($responseKey, $responseData) || ($responseData[$responseKey] === null && $likertQuestion['type'] !== 'separator')) {
+                            $found = true;
+                        }
                     }
                 }
-            }
-        } while (array_key_exists('page'. $idPage, $likertQuestions) && !$found);
+            } while (array_key_exists('page'. $idPage, $likertQuestions) && !$found);
+        }
 
         $formBuilder = $this->createFormBuilder($responseData, ['allow_extra_fields' => true]);
         $isLastPage = false;
@@ -333,6 +337,7 @@ class SurveyController extends Controller
                 ))
             ;
         }
+        $formBuilder->add('pageNumber', Type\HiddenType::class, ['data' => $idPage]);
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -349,7 +354,7 @@ class SurveyController extends Controller
             }
 
             $this->get('session')->set('keys_ordered', null);
-            if ($idPage > (count($likertQuestions) + 1)) {
+            if ($isLastPage) {
 
                 $time = time();
                 $respondent->setFinishDate(new \DateTime());
