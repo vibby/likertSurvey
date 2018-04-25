@@ -341,6 +341,10 @@ class SurveyController extends Controller
             $respondent->setResponse($data);
 
             if ($request->isXmlHttpRequest()) {
+                $em = $this->getDoctrine()->getManagerForClass(Respondent::class);
+                $em->persist($respondent);
+                $em->flush();
+
                 return new Response('ok');
             }
 
