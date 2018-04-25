@@ -349,7 +349,7 @@ class SurveyController extends Controller
             }
 
             $this->get('session')->set('keys_ordered', null);
-            if ($idPage > count($likertQuestions)) {
+            if ($idPage > (count($likertQuestions) + 1)) {
 
                 $time = time();
                 $respondent->setFinishDate(new \DateTime());
