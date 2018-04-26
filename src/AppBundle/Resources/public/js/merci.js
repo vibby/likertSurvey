@@ -57,7 +57,9 @@ function addSubForm($collectionHolder, $newLinkLi) {
     // get the new index
     var index = $collectionHolder.data('index');
 
-    var newForm = prototype;
+    // Replace '__name__' in the prototype's HTML to
+    // instead be a number based on how many items we have
+    var newForm = prototype.replace(/__name__/g, index);
 
     // increase the index with one for the next item
     $collectionHolder.data('index', index + 1);
