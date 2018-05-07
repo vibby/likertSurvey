@@ -127,6 +127,9 @@ class AdminController extends Controller
             $socioDemo = [
                 'Sexe',
                 'age',
+                'Duree_societe',
+                'Duree_poste',
+                'Duree_management',
                 'Salaire',
                 'Niveau_etude',
                 'Profession',
