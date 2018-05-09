@@ -1,4 +1,4 @@
-Email,Key,URL,Email feedback,feedbackTeam,Inséré le,Nb collab,collab,source,domain,is manager,{% for key in questionKeys %}{{ key }},{% endfor %}
+Email,Key,URL,Email feedback,feedbackTeam,Inséré le,Nb collab,collab,source,domain,is manager,is finished,{% for key in questionKeys %}{{ key }},{% endfor %}
 
 {% for respondent in respondents %}
     {{- respondent.email -}},
@@ -15,17 +15,17 @@ Email,Key,URL,Email feedback,feedbackTeam,Inséré le,Nb collab,collab,source,do
     {{- respondent.source -}},
     {{- respondent.domain -}},
     {{- respondent.isManager -}},
+    {{- respondent.isFinished -}},
     {%- for key in questionKeys -%}
-        {%- set keyFound = false -%}
         {%- for keyA,answer in respondent.response -%}
             {%- if keyA == key -%}
-                {{ answer }},
-                {%- set keyFound = true -%}
+                {%- if answer is iterable -%}
+                    {{- answer|join(':') -}}
+                {%- else -%}
+                    {{- answer -}}
+                {%- endif -%}
             {%- endif -%}
-        {%- endfor -%}
-        {%- if not keyFound -%}
-            ,
-        {%- endif -%}
+        {%- endfor -%},
     {%- endfor %}
 
 {% endfor %}

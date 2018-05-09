@@ -120,10 +120,14 @@ class AdminController extends Controller
             $allQuestionKey = [];
             foreach ($likertQuestions as $page => $likertQuestion) {
                 foreach ($likertQuestion as $qKey => $qData) {
-                    $allQuestionKey[] = $page . '_item' . $qKey;
+                    $allQuestionKey[sprintf(
+                        '%s_itemq%05d',
+                        $page, (int)
+                        filter_var($qKey, FILTER_SANITIZE_NUMBER_INT)
+                    )] = $page . '_item' . $qKey;
                 }
             }
-            sort($allQuestionKey);
+            ksort($allQuestionKey);
             $socioDemo = [
                 'Sexe',
                 'age',
