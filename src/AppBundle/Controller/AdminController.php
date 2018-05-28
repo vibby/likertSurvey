@@ -113,18 +113,20 @@ class AdminController extends Controller
             );
         } else {
             $likertQuestions = array_merge(
-                $this->container->getParameter('likert_questions_manager'),
-                $this->container->getParameter('likert_questions_collab'),
-                $this->container->getParameter('likert_questions_common')
+                ['likert_questions_manager' => $this->container->getParameter('likert_questions_manager')],
+                ['likert_questions_collab' => $this->container->getParameter('likert_questions_collab')],
+                ['likert_questions_common' => $this->container->getParameter('likert_questions_common')]
             );
             $allQuestionKey = [];
-            foreach ($likertQuestions as $page => $likertQuestion) {
-                foreach ($likertQuestion as $qKey => $qData) {
-                    $allQuestionKey[sprintf(
-                        '%s_itemq%05d',
-                        $page, (int)
-                        filter_var($qKey, FILTER_SANITIZE_NUMBER_INT)
-                    )] = $page . '_item' . $qKey;
+            foreach ($likertQuestions as $group => $pages) {
+                foreach ($pages as $page => $likertQuestion) {
+                    foreach ($likertQuestion as $qKey => $qData) {
+                        $allQuestionKey[sprintf(
+                            '%s_itemq%05d',
+                            $page, (int)
+                            filter_var($qKey, FILTER_SANITIZE_NUMBER_INT)
+                        )] = $page . '_item' . $qKey;
+                    }
                 }
             }
             ksort($allQuestionKey);
