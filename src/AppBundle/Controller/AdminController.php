@@ -121,11 +121,14 @@ class AdminController extends Controller
             foreach ($likertQuestions as $group => $pages) {
                 foreach ($pages as $page => $likertQuestion) {
                     foreach ($likertQuestion as $qKey => $qData) {
-                        $allQuestionKey[sprintf(
-                            '%s_itemq%05d',
-                            $page, (int)
-                            filter_var($qKey, FILTER_SANITIZE_NUMBER_INT)
-                        )] = $page . '_item' . $qKey;
+                        if (strpos($qKey, 'intro') === false) {
+                            $allQuestionKey[sprintf(
+                                '%s_%s_itemq%05d',
+                                $group,
+                                $page,
+                                (int) filter_var($qKey, FILTER_SANITIZE_NUMBER_INT)
+                            )] = $page . '_item' . $qKey;
+                        }
                     }
                 }
             }

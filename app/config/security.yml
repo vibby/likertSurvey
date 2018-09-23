@@ -11,7 +11,8 @@ security:
                         password: $2y$13$z85rtfPRelS8uZ8jsKhFfeuifjc.AICHCk9k8cSrBb7mShLiCoMCa
                         roles: 'ROLE_ADMIN'
                     vibby:
-                        password: $2y$13$afGP5AVni9SueyHhHZmqM.iz4UUU1V.DQfXBQzBvA1XEs/GYxrWrC
+                            #                        password: $2y$13$afGP5AVni9SueyHhHZmqM.iz4UUU1V.DQfXBQzBvA1XEs/GYxrWrC
+                        password: $2y$12$LB/regYIRmfPSGjEz2pK1.GTyXllOpKhMh9GHZTUw3euTi9JywY/S
                         roles: 'ROLE_ADMIN'
                     lucie:
                         password: $2y$10$2keYUubXbSq1Nr2WOcFWyOwVzbhHTkq8T9778Q1272LpPHgSIHbie
