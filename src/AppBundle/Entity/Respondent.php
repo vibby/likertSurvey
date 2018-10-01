@@ -341,4 +341,9 @@ class Respondent
     {
         $this->isManager = $isManager;
     }
+
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
 }

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Respondent;
 use AppBundle\Form\IsManagerType;
 use AppBundle\Form\YearsMonthsType;
+use AppBundle\Survey\DomainIdentifier;
 use AppBundle\Tools\Shuffle;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,6 +16,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class SurveyController extends Controller
 {
+    private $domainIdentifier;
+
+    public function __construct(DomainIdentifier $domainIdentifier)
+    {
+        $this->domainIdentifier = $domainIdentifier;
+    }
+
     /**
      * @Route(
      *     "/commencer",
@@ -46,15 +54,41 @@ class SurveyController extends Controller
         );
     }
 
+
+    /**
+     * @Route("/questionnaire-enquete", name="anonymous_survey")
+     */
+    public function questionnaireAnonymousAction(Request $request)
+    {
+        if ($this->getParameter('mode') !== 'anonymous') {
+            $this->redirectToRoute('homepage');
+        }
+
+        if (!($respondent = $this->getAnonymousRespondent()) instanceof Respondent) {
+            return $respondent;
+        }
+
+        return $this->questionnaire($request, $respondent);
+    }
+
     /**
      * @Route("/questionnaire", name="survey")
      */
     public function questionnaireAction(Request $request)
     {
+        if ($this->getParameter('mode') === 'anonymous') {
+            $this->redirectToRoute('anonymous_mode_home');
+        }
+
         if (!($respondent = $this->getRespondentFromSessionOrRedirect()) instanceof Respondent) {
             return $respondent;
         }
 
+        return $this->questionnaire($request, $respondent);
+    }
+
+    private function questionnaire(Request $request, $respondent)
+    {
         if ($respondent->getIsManager() === null) {
             return $this->redirectToRoute('is_manager');
         }
@@ -415,8 +449,7 @@ class SurveyController extends Controller
         if (!$scale = $this->getScale($likertQuestion)) {
             return [];
         }
-
-        if (isset($scale['scale'])) {
+if (isset($scale['scale'])) {
             $scale = $scale['scale'];
         }
         switch ($likertQuestion['type']) {
@@ -446,6 +479,49 @@ class SurveyController extends Controller
         $likertScales = $this->container->getParameter('likert_scales');
 
         return $likertScales[$likertQuestion['scale']];
+    }
+
+    private function getAnonymousRespondent()
+    {
+        $currentRespondentKey = $this->get('session')->get('currentRespondentKey');
+        if (!$currentRespondentKey) {
+            $currentRespondentKey = substr(
+                str_shuffle(
+                    str_repeat(
+                        $x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                        ceil(20 / strlen($x))
+                    )
+                ),
+                1,
+                20
+            );
+            $respondent = new Respondent();
+            $respondent->setIsManager(false);
+            $respondent->setEmail($currentRespondentKey.'@example.com');
+            $respondent->setKey($currentRespondentKey);
+            $respondent->setSource('anonymous');
+            $respondent->setDomain($this->domainIdentifier->getIdentifier());
+            $this->get('session')->set('currentRespondentKey', $currentRespondentKey);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($respondent);
+            $em->flush();
+
+            return $respondent;
+        }
+        $respondent = $this->getDoctrine()->getRepository(Respondent::class)->findOneBy(['key' => $currentRespondentKey]);
+        if (!$respondent) {
+            $this->addFlash('error', 'La session de votre clé d’activation ne correspond pas !');
+            $this->get('session')->set('stop', true);
+
+            return $this->redirectToRoute('homepage');
+        }
+        if ($respondent->isFinished()) {
+            $this->addFlash('success', 'Vous avez déjà complété l’enquête');
+
+            return $this->redirectToRoute('thanks');
+        }
+
+        return $respondent;
     }
 
     private function getRespondentFromSessionOrRedirect()

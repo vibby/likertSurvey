@@ -17,6 +17,10 @@ class AfterController extends Controller
      */
     public function merciAction(Request $request)
     {
+        if ($this->getParameter('mode') === 'anonymous') {
+            return $this->redirectToRoute('anonymous_thanks');
+        }
+
         $form = null;
         if ($respondentId = $this->get('session')->get('respondentId')) {
             $repository = $this->getDoctrine()->getRepository(Respondent::class);
@@ -58,6 +62,41 @@ class AfterController extends Controller
 
         return $this->render(
             'merci.html.twig',
+            [
+                'form' => $form ? $form->createView() : null,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/remerciements", name="anonymous_thanks")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function merci2Action(Request $request)
+    {
+        if ($this->getParameter('mode') !== 'anonymous') {
+            return $this->redirectToRoute('thanks');
+        }
+
+        $form = null;
+        if ($respondentId = $this->get('session')->get('respondentId')) {
+            $repository = $this->getDoctrine()->getRepository(Respondent::class);
+            $respondent = $repository->find($respondentId);
+            $form = $this->createForm(GetFeedbackType::class, $respondent, ['attr' => ['source' => Respondent::SOURCE_AFTER]]);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->get('session')->set('respondentId', null);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($respondent);
+                $em->flush();
+
+                return $this->redirectToRoute('thanks');
+            }
+        }
+
+        return $this->render(
+            'merci-anonymous.html.twig',
             [
                 'form' => $form ? $form->createView() : null,
             ]

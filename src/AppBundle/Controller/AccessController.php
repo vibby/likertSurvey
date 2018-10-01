@@ -36,6 +36,10 @@ class AccessController extends Controller
      */
     public function indexAction(Request $request, $key = '')
     {
+        if ($this->getParameter('mode') === 'anonymous') {
+            return $this->redirectToRoute('anonymous_mode_home');
+        }
+
         $keyForm = $this->createForm(KeyType::class);
         if ($errorMessage = $this->get('session')->get('lastKeyFormError')) {
             $keyForm['key']->addError(new FormError($errorMessage));
@@ -113,6 +117,23 @@ class AccessController extends Controller
             'keyForm' => $keyForm->createView(),
             'registerForm' => $registerForm->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/acceuil_enquete",
+     *     name="anonymous_mode_home"
+     * )
+     */
+    public function anonymousHomeAction(Request $request)
+    {
+        if ($this->getParameter('mode') !== 'anonymous') {
+            $this->redirectToRoute('homepage');
+        }
+        if ($request->getMethod() === 'POST' && $request->request->get('count') === "2") {
+            return $this->redirectToRoute('anonymous_survey');
+        }
+
+        return $this->render('anonymous_home.html.twig');
     }
 
     /**
