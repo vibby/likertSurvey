@@ -1,4 +1,4 @@
-Email,Key,URL,Email feedback,feedbackTeam,Inséré le,Nb collab,collab,source,domain,is manager,is finished,{% for key in questionKeys %}{{ key }},{% endfor %}
+Email,Key,URL,Email feedback,feedbackTeam,Inséré le,Commencé le,Fini le,Nb collab,collab,source,domain,is manager,is finished,{% for key in questionKeys %}{{ key }},{% endfor %}
 
 {% for respondent in respondents %}
     {{- respondent.email -}},
@@ -7,6 +7,8 @@ Email,Key,URL,Email feedback,feedbackTeam,Inséré le,Nb collab,collab,source,do
     {{- respondent.emailFeedback -}},
     {{- respondent.feedbackTeam -}},
     {{- respondent.createdDate|date('Y-m-d') -}},
+    {{- respondent.startDate|date('Y-m-d') -}},
+    {{- respondent.finishDate|date('Y-m-d') -}},
     {{- respondent.subordinates|length -}},
     {%- for subordinate in respondent.subordinates -%}
         {%- if not loop.first -%}|{%- endif -%}
