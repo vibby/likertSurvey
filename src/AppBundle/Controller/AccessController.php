@@ -130,7 +130,7 @@ class AccessController extends Controller
             $this->redirectToRoute('homepage');
         }
         if ($request->getMethod() === 'POST' && $request->request->get('count') === "2") {
-            return $this->redirectToRoute('anonymous_survey');
+            return $this->redirectToRoute('is_manager');
         }
 
         return $this->render('anonymous_home.html.twig');

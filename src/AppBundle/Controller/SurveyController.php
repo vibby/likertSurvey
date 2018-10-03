@@ -31,8 +31,15 @@ class SurveyController extends Controller
      */
     public function isManagerAction(Request $request)
     {
-        if (!($respondent = $this->getRespondentFromSessionOrRedirect()) instanceof Respondent) {
-            return $respondent;
+        $mode = $this->getParameter('mode');
+        if ($mode === 'anonymous') {
+            if (!($respondent = $this->getAnonymousRespondent()) instanceof Respondent) {
+                return $respondent;
+            }
+        } else {
+            if (!($respondent = $this->getRespondentFromSessionOrRedirect()) instanceof Respondent) {
+                return $respondent;
+            }
         }
 
         $isManagerForm = $this->createForm(IsManagerType::class, $respondent);
@@ -43,7 +50,7 @@ class SurveyController extends Controller
             $em->persist($respondent);
             $em->flush();
 
-            return $this->redirectToRoute('survey');
+            return $this->redirectToRoute($mode === 'anonymous' ? 'anonymous_survey' : 'survey');
         }
 
         return $this->render(

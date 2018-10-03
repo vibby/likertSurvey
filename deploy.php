@@ -27,6 +27,13 @@ server('production', 'teep.fr')
     ->pty(false);
 
 
+server('productionAnonymous', 'teep.fr')
+    ->user('teepadmin')
+    ->identityFile('~/.ssh/id_rsa.pub', '~/.ssh/id_rsa', '')
+    ->set('deploy_path', '/var/www/vhosts/teep.fr/teep-anonymous')
+    ->pty(false);
+
+
 // Tasks
 
 /*
